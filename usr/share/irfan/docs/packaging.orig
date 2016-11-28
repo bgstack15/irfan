@@ -1,0 +1,34 @@
+File: /usr/share/irfan/docs/packaging.txt
+Package: irfan
+Author: bgstack15
+Startdate: 2016-06-20
+Title: Packing instructions for irfan
+Purpose: To make it easier to build the package
+Usage:
+Reference: README.txt
+Improve:
+Document: Below this line
+
+### PACKAGING for rhel/centos/fedora
+rpmbuilddir=~/rpmbuild/
+package=irfan
+fullversion=4.42-2
+version=4.42
+packagespecfile="${package}-${fullversion}/usr/share/${package}/docs/${package}.spec"
+sed -i -n '1,/^\%files$/p;' ${rpmbuilddir}/SOURCES/"${packagespecfile}"
+cd ${rpmbuilddir}/SOURCES/"${package}-${fullversion}"
+find * \( ! -type d -o -regex '.*Plugins\|.*Toolbars' \) ! -regex '.*\(Plugins\|Toolbars\).+' ! -regex '.*?.swp' ! -regex '>*?DEBIAN.*?' | sed -e 's/^/\//;' -e 's/\(\(.*packaging\|.*README\)\.txt\)/%doc %attr(444, -, -) \1/;' -e 's/\(.*\.ini\)/%config %attr(666, -, -) \1/;' -e 's/\(.*\(\.sh\|\.desktop\)\)/%attr(755, -, -) \1/;' >> ${rpmbuilddir}/SOURCES/"${packagespecfile}"
+rm -rf ${rpmbuilddir}/SOURCES/"${package}-${version}"; cp -prf ${rpmbuilddir}/SOURCES/"${package}-${fullversion}" ${rpmbuilddir}/SOURCES/"${package}-${version}"
+rm -rf ${rpmbuilddir}/SOURCES/"${package}-${version}"/DEBIAN
+cd ${rpmbuilddir}/SOURCES
+rm -rf "${package}".tgz; tar -zcf "${package}.tgz" "${package}-${version}"
+\cp -pf ${rpmbuilddir}/SOURCES/"${packagespecfile}" ~/rpmbuild/SPECS
+cd ${rpmbuilddir}/SPECS
+rpmbuild -bb "${package}".spec
+
+### PACKAGING in a master.tgz
+cd ~/deb || cd ~/rpmbuild/SOURCES
+package=irfan
+version=4.42-2
+rm -rf ./"${package}-${version}".master.tgz
+tar -zcf ./"${package}-${version}".master.tgz "${package}-${version}"/

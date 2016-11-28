@@ -1,0 +1,36 @@
+File: /usr/share/irfan/docs/packaging.txt
+Package: irfan
+Author: bgstack15
+Startdate: 2016-06-20
+Title: Packing instructions for irfan
+Purpose: To make it easier to build the package
+Usage:
+Reference: README.txt
+Improve:
+Document: Below this line
+
+### PACKAGING for rhel/centos/fedora
+rpmbuilddir=~/rpmbuild/
+package=irfan
+version=4.42-2
+shortversion=4.42
+packagespecfile="${package}-${version}/usr/share/${package}/docs/${package}.spec"
+sed -n -e '1,/^\%files$/p;' "${rpmbuilddir}/SOURCES/${packagespecfile}" > "${rpmbuilddir}/SOURCES/${packagespecfile}.swp" #removes files and changelog
+cd ${rpmbuilddir}/SOURCES/"${package}-${version}"
+find * ! -regex '.*?.swp' ! -regex '>*?DEBIAN.*?' | sed -e 's/^/\//;' -e 's/\(\(.*packaging\|.*README\)\.txt\)/%doc %attr(444, -, -) \1/;' -e 's/\(.*\.ini\)/%config %attr(666, -, -) \1/;' -e 's/\(.*\.sh\)/%attr(755, -, -) \1/;' -e 's/\(.*\.desktop\)/%attr(644, -, -) \1/;' >> ${rpmbuilddir}/SOURCES/"${packagespecfile}.swp"
+sed -n -e '/^\%changelog/,$p' "${rpmbuildir}/SOURCES/${packagespecfile}" >> "${rpmbuilddir}/SOURCES/${packagespecfile}.swp"
+mv -f "${rpmbuilddir}/SOURCES/${packagespecfile}.swp" "${rpmbuilddir}/SOURCES/${packagespecfile}"
+rm -rf ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"; cp -prf ${rpmbuilddir}/SOURCES/"${package}-${version}" ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"
+rm -rf ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"/DEBIAN
+cd "${rpmbuilddir}/SOURCES"
+rm -rf "${package}.tgz"; tar -zc --exclude='.git' -f "${package}.tgz" "${package}-${shortversion}"
+/bin/cp -pf "${rpmbuilddir}/SOURCES/${packagespecfile}" "${rpmbuilddir}/SPECS"
+cd "${rpmbuilddir}/RPMS/noarch"
+rpmbuild -bb "${rpmbuilddir}/SPECS/${package}.spec"
+
+### PACKAGING in a master.tgz
+cd ~/deb || cd ~/rpmbuild/SOURCES
+package=irfan
+version=4.42-2
+rm -rf ./"${package}-${version}".master.tgz
+tar -zcf ./"${package}-${version}".master.tgz "${package}-${version}"/

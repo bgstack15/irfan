@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=Irfanview
+GenericName=Graphics Viewer
+Comment=View graphics
+Exec=/usr/share/irfan/irfan.sh %f
+Icon=/usr/share/irfan/inc/irfanview64x64.png
+Terminal=false
+Type=Application
+MimeType=x-content/image-dcf;image/png;image/gif;image/jpeg;image/jpg;image/bmp;image/tiff;
+StartupNotify=true
+Categories=Graphics;Viewer;
+Keywords=irfan;graphics;image;viewer;batch;
+X-Desktop-File-Install-Version=1.0
