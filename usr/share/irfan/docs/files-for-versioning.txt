@@ -1,0 +1,5 @@
+docs/packaging.txt
+docs/irfan.spec
+inc/irfan_ver.txt
+inc/scrub.txt
+inc/localize_git.sh

@@ -25,8 +25,19 @@ The font is weird in the dialogs, but is still mostly usable. This bug is not pr
 ###Future use
 # maybe do this, in case the irfanview.desktop modification was not helpful. Add these to a mimetype list, probably ~/.local/share/applications/mimeapps.list
 [Default Applications]
-image/png=Irfanview.desktop
-image/jpeg=Irfanview.desktop
-image/tiff=Irfanview.desktop
-image/bmp=Irfanview.desktop
-image/gif=Irfanview.desktop
+image/png=irfanview.desktop
+image/jpeg=irfanview.desktop
+image/tiff=irfanview.desktop
+image/bmp=irfanview.desktop
+image/gif=irfanview.desktop
+
+# TODO:
+# files to add that stuff to?
+/usr/share/applications/gnome-mimeapps.list
+/usr/share/applications/mimeapps.list
+/usr/share/applications/xfce-mimeapps.list
+/usr/share/applications/kde-mimeapps.list
+/usr/share/applications/x-cinnamon-mimeapps.list
+/usr/share/applications/mimeinfo.cache
+~/.local/share/applications/mimeinfo.cache
+# commands to look for? xdg-mime default; xdg-open; gvfs-mime --set; 

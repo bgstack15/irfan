@@ -2,7 +2,7 @@
 # bgscripts15@gmail.com
 Name:		irfan
 Version:	4.42
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Irfanview 4.42 packaged for Fedora 24
 
 Group:		Applications/Graphics
@@ -14,8 +14,8 @@ Packager:	Bgstack15 <bgstack15@gmail.com>
 Buildarch:	noarch
 #BuildRequires:	
 Requires:	wine >= 1.3
-PreReq:		bgscripts >= 1.1-18, curl, p7zip
-# will need 7z or gunzip or something
+# for production use make this dependent on bgscripts 1.1-20 for the --noglobalprofile flag on bgscripts.bashrc
+Requires(pre):	bgscripts >= 1.1-18, curl, p7zip
 
 %description
 Irfanview is an amazing graphics application for a different platform. Using wine, you can run irfanview on Linux.
@@ -34,11 +34,46 @@ rsync -a . %{buildroot}/
 rm -rf ${buildroot}
 
 %post
-/usr/share/irfan/inc/install-irfanview.sh
-desktop-file-install /usr/share/irfan/Irfanview.desktop
+/usr/share/irfan/install-irfanview.sh || exit 1
+desktop-file-install --rebuild-mime-info-cache /usr/share/irfan/irfanview.desktop
+#/usr/share/irfan/install-irfanview.sh || exit 1
+
+# Remove wine viewer things
+/usr/bgscripts/updateval.py --apply /home/bgstack15-local/.local/share/applications/mimeinfo.cache "application/pdf=wine-extension-pdf.desktop;" "" >/dev/null 2&>1
+/usr/bgscripts/updateval.py --apply /home/bgstack15-local/.local/share/applications/mimeinfo.cache "image/gif=wine-extension-gif.desktop;" "" >/dev/null 2&>1
+/usr/bgscripts/updateval.py --apply /home/bgstack15-local/.local/share/applications/mimeinfo.cache "image/jpeg=wine-extension-jpe.desktop;wine-extension-jfif.desktop;" "" >/dev/null 2&>1
+/usr/bgscripts/updateval.py --apply /home/bgstack15-local/.local/share/applications/mimeinfo.cache "image/png=wine-extension-png.desktop;" "" >/dev/null 2&>1 ||:
+# Set default application
+while read line;
+do
+   ( which gvfs-mime >/dev/null 2>&1) && gvfs-mime --set "${line}" irfanview.desktop 1>/dev/null 2>&1
+   ( which xdg-mime >/dev/null 2>&1) && xdg-mime default irfanview.desktop "${line}" 1>/dev/null 2>&1
+done <<'EOW'
+image/jpeg
+image/gif
+image/png
+image/tiff
+image/bmp
+EOW
+exit 0
+
+%preun
+if test "$1" = "0";
+then
+   # total uninstall
+   /usr/share/irfan/uninstall-irfanview.sh ||:
+fi
 
 %postun
-rm -f /usr/share/applications/Irfanview.desktop >/dev/null 2>&1
+if test "$1" = "0";
+then
+   # total uninstall
+   rm -f /usr/share/applications/irfanview.desktop >/dev/null 2>&1 ||:
+   if ( which update-desktop-database 1>/dev/null );
+   then
+      update-desktop-database -q /usr/share/applications
+   fi
+fi
 
 %files
 /usr
@@ -46,18 +81,25 @@ rm -f /usr/share/applications/Irfanview.desktop >/dev/null 2>&1
 /usr/share/irfan
 /usr/share/irfan/inc
 /usr/share/irfan/inc/irfan_ver.txt
-%attr(755, -, -) /usr/share/irfan/inc/install-irfanview.sh
 %config %attr(666, -, -) /usr/share/irfan/inc/i_view32.ini
 /usr/share/irfan/inc/irfanview64x64.png
+/usr/share/irfan/inc/sha256sum.txt
+/usr/share/irfan/inc/scrub.txt
 /usr/share/irfan/inc/winetricks
 %attr(755, -, -) /usr/share/irfan/inc/irfan-vlc.sh
 /usr/share/irfan/inc/irfanview32x32.png
+%attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
+%attr(755, -, -) /usr/share/irfan/install-irfanview.sh
+%attr(644, -, -) /usr/share/irfan/irfanview.desktop
 /usr/share/irfan/irfanview
+%attr(755, -, -) /usr/share/irfan/uninstall-irfanview.sh
 /usr/share/irfan/source
-%attr(644, -, -) /usr/share/irfan/Irfanview.desktop
 %attr(755, -, -) /usr/share/irfan/irfan.sh
 /usr/share/irfan/docs
 %doc %attr(444, -, -) /usr/share/irfan/docs/packaging.txt
 %doc %attr(444, -, -) /usr/share/irfan/docs/README.txt
 /usr/share/irfan/docs/irfan.spec
-/usr/share/irfan/docs/packaging.orig
+/usr/share/irfan/docs/files-for-versioning.txt
+%changelog
+* Tue Nov 29 2016 B Stack <bgstack15@gmail.com>
+- initial package built
