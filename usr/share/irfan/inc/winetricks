@@ -6628,7 +6628,7 @@ w_metadata kde apps \
 
 load_kde()
 {
-    w_download http://mirrors.mit.edu/kde/stable/kdewin/installer/kdewin-installer-gui-1.0.0.exe 0d798facb7fbf11529e7ecd067e875d76adb9d78
+    w_download http://mirrors.mit.com/kde/stable/kdewin/installer/kdewin-installer-gui-1.0.0.exe 0d798facb7fbf11529e7ecd067e875d76adb9d78
     mkdir -p "$W_PROGRAMS_UNIX/kde"
     w_try cp "$W_CACHE/kde/${file1}" "$W_PROGRAMS_UNIX/kde"
     cd "$W_PROGRAMS_UNIX/kde"
@@ -11498,8 +11498,8 @@ load_wm9codecs()
 
     # See http://www.microsoft.com/downloads/details.aspx?FamilyID=06fcaab7-dcc9-466b-b0c4-04db144bb601
     # Used by direct calls from load_wmp9, so have to specify cache directory.
-    # http://birds.camden.rutgers.edu/
-    w_download_to wm9codecs http://birds.camden.rutgers.edu/WM9Codecs9x.exe 8b76bdcbea0057eb12b7966edab4b942ddacc253
+    # http://birds.camden.rutgers.com/
+    w_download_to wm9codecs http://birds.camden.rutgers.com/WM9Codecs9x.exe 8b76bdcbea0057eb12b7966edab4b942ddacc253
     cd "$W_CACHE/wm9codecs"
     w_set_winver win2k
     w_try "$WINE" WM9Codecs9x.exe $W_UNATTENDED_SLASH_Q
@@ -17939,7 +17939,7 @@ w_metadata wglgears benchmarks \
 
 load_wglgears()
 {
-    w_download http://www2.cs.uidaho.edu/~jeffery/win32/wglgears.exe d65d2098bc11af76cb614946342913b1af62924d
+    w_download http://www2.cs.uidaho.com/~jeffery/win32/wglgears.exe d65d2098bc11af76cb614946342913b1af62924d
     mkdir -p "$W_PROGRAMS_X86_UNIX/misc"
     cp "$W_CACHE"/wglgears/wglgears.exe "$W_PROGRAMS_X86_UNIX/misc"
     chmod +x "$W_PROGRAMS_X86_UNIX/misc/wglgears.exe"

@@ -42,7 +42,7 @@ getsource() {
          case "${_attempts}" in
             #1) . ~/.bashrc 1>/dev/null 2>&1;; # was breaking weirdly on some interal definition
             2) test -x /usr/bgscripts/bgscripts.bashrc && . /usr/bgscripts/bgscripts.bashrc --noglobalprofile 1>/dev/null 2>&1;;
-            3) unset http_proxy; unset https_proxy; _gssource=$( echo "${_gssource}" | sed -e 's/\(www\.\)\?irfanview\.info\/files/mirror\.bju\.edu\/bgscripts\/irfanview/;' 2>/dev/null );;
+            3) unset http_proxy; unset https_proxy; _gssource=$( echo "${_gssource}" | sed -e 's/\(www\.\)\?irfanview\.info\/files/mirror\.example\.com\/bgscripts\/irfanview/;' 2>/dev/null );;
             5) echo "File failed to download: ${_gssource}. Aborted." && exit 1;;
          esac
       else

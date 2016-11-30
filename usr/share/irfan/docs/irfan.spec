@@ -14,8 +14,7 @@ Packager:	Bgstack15 <bgstack15@gmail.com>
 Buildarch:	noarch
 #BuildRequires:	
 Requires:	wine >= 1.3
-# for production use make this dependent on bgscripts 1.1-20 for the --noglobalprofile flag on bgscripts.bashrc
-Requires(pre):	bgscripts >= 1.1-18, curl, p7zip
+Requires(pre):	bgscripts >= 1.1-20, curl, p7zip
 
 %description
 Irfanview is an amazing graphics application for a different platform. Using wine, you can run irfanview on Linux.
@@ -103,3 +102,6 @@ fi
 %changelog
 * Tue Nov 29 2016 B Stack <bgstack15@gmail.com>
 - initial package built
+
+* Wed Nov 30 2016 B Stack <bgstack15@gmail.com>
+- install functionality fully built
