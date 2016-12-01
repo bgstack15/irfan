@@ -2,7 +2,8 @@
 # bgscripts15@gmail.com
 Name:		irfan
 Version:	4.42
-Release:	3%{?dist}
+#Release:	3%{?dist}
+Release:	3
 Summary:	Irfanview 4.42 packaged for Fedora 24
 
 Group:		Applications/Graphics
@@ -103,6 +104,10 @@ fi
 /usr/share/irfan/docs/irfan.spec
 /usr/share/irfan/docs/files-for-versioning.txt
 %changelog
+* Thu Dec  1 2016 B Stack <bgstack15@gmail.com>
+- 4.42-3
+- Official first release across different Fedora versions
+
 * Wed Nov 30 2016 B Stack <bgstack15@gmail.com>
 - install functionality fully built
 
