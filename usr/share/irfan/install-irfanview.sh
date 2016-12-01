@@ -53,9 +53,9 @@ getsource() {
 }
 
 # Ensure target directories exists
-if ! test -d "${outdir}/source";
+if ! test -d "${outdir}/../source";
 then
-   mkdir -p "${outdir}/source" || { echo "Unable to make directory ${outdir}. Aborted."; exit 1; }
+   mkdir -p "${outdir}/../source" || { echo "Unable to make directory ${outdir}. Aborted."; exit 1; }
 fi
 
 # Get irfanview version to install.

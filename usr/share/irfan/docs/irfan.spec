@@ -78,30 +78,28 @@ fi
 /usr
 /usr/share
 /usr/share/irfan
-/usr/share/irfan/inc
-/usr/share/irfan/inc/irfan_ver.txt
-%config %attr(666, -, -) /usr/share/irfan/inc/i_view32.ini
-/usr/share/irfan/inc/irfanview64x64.png
-/usr/share/irfan/inc/sha256sum.txt
-/usr/share/irfan/inc/scrub.txt
-/usr/share/irfan/inc/winetricks
-%attr(755, -, -) /usr/share/irfan/inc/irfan-vlc.sh
-/usr/share/irfan/inc/irfanview32x32.png
-%attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
-%attr(755, -, -) /usr/share/irfan/install-irfanview.sh
-%attr(644, -, -) /usr/share/irfan/irfanview.desktop
-/usr/share/irfan/irfanview
-%attr(755, -, -) /usr/share/irfan/uninstall-irfanview.sh
-/usr/share/irfan/source
-%attr(755, -, -) /usr/share/irfan/irfan.sh
 /usr/share/irfan/docs
+/usr/share/irfan/docs/files-for-versioning.txt
+/usr/share/irfan/docs/irfan.spec
 %doc %attr(444, -, -) /usr/share/irfan/docs/packaging.txt
 %doc %attr(444, -, -) /usr/share/irfan/docs/README.txt
-/usr/share/irfan/docs/irfan.spec
-/usr/share/irfan/docs/files-for-versioning.txt
+%attr(755, -, -) /usr/share/irfan/irfan.sh
+%attr(755, -, -) /usr/share/irfan/uninstall-irfanview.sh
+%attr(755, -, -) /usr/share/irfan/install-irfanview.sh
+/usr/share/irfan/inc
+/usr/share/irfan/inc/winetricks
+%config %attr(666, -, -) /usr/share/irfan/inc/i_view32.ini
+/usr/share/irfan/inc/scrub.txt
+/usr/share/irfan/inc/sha256sum.txt
+/usr/share/irfan/inc/irfanview32x32.png
+%attr(755, -, -) /usr/share/irfan/inc/irfan-vlc.sh
+/usr/share/irfan/inc/irfan_ver.txt
+%attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
+/usr/share/irfan/inc/irfanview64x64.png
+%attr(644, -, -) /usr/share/irfan/irfanview.desktop
 %changelog
-* Tue Nov 29 2016 B Stack <bgstack15@gmail.com>
-- initial package built
-
 * Wed Nov 30 2016 B Stack <bgstack15@gmail.com>
 - install functionality fully built
+
+* Tue Nov 29 2016 B Stack <bgstack15@gmail.com>
+- initial package built
