@@ -12,7 +12,7 @@ Document: Below this line
 ### PACKAGING for rhel/centos/fedora
 rpmbuilddir=~/rpmbuild/
 package=irfan
-version=4.42-3
+version=4.42-4
 shortversion=4.42
 packagespecfile="${package}-${version}/usr/share/${package}/docs/${package}.spec"
 sed -n -e '1,/^\%files$/p;' "${rpmbuilddir}/SOURCES/${packagespecfile}" > "${rpmbuilddir}/SOURCES/${packagespecfile}.swp" #removes files and changelog
@@ -31,6 +31,6 @@ rpmbuild -bb "${rpmbuilddir}/SPECS/${package}.spec"
 ### PACKAGING in a master.tgz
 cd ~/deb || cd ~/rpmbuild/SOURCES
 package=irfan
-version=4.42-3
+version=4.42-4
 rm -rf ./"${package}-${version}".master.tgz
 tar -zcf ./"${package}-${version}".master.tgz "${package}-${version}"/

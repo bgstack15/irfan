@@ -3,8 +3,8 @@
 Name:		irfan
 Version:	4.42
 #Release:	3%{?dist}
-Release:	3
-Summary:	Irfanview 4.42 packaged for Fedora 24
+Release:	4
+Summary:	Irfanview 4.42, a graphics viewer
 
 Group:		Applications/Graphics
 License:	Installer is CC-BY-SA
@@ -34,9 +34,8 @@ rsync -a . %{buildroot}/
 rm -rf ${buildroot}
 
 %post
-/usr/share/irfan/install-irfanview.sh || exit 1
+/usr/share/irfan/install-irfanview.sh || exit 2
 desktop-file-install --rebuild-mime-info-cache /usr/share/irfan/irfanview.desktop
-#/usr/share/irfan/install-irfanview.sh || exit 1
 
 # Remove wine viewer things
 for thisuser in bgstack15 bgstack15-local Bgstack15;
@@ -47,17 +46,28 @@ do
    done
 done
 # Set default application
-while read line;
+for thisuser in Bgstack15 bgstack15 bgstack15-local ${SUDO_USER};
 do
-   ( which gvfs-mime >/dev/null 2>&1) && gvfs-mime --set "${line}" irfanview.desktop 1>/dev/null 2>&1
-   ( which xdg-mime >/dev/null 2>&1) && xdg-mime default irfanview.desktop "${line}" 1>/dev/null 2>&1
-done <<'EOW'
+   while read line;
+   do
+      which gvfs-mime >/dev/null 2>&1 && {
+         gvfs-mime --set "${line}" irfanview.desktop 1>/dev/null 2>&1
+         getent passwd "${thisuser}" >/dev/null 2>&1 && \
+            su "${thisuser}" -c "gvfs-mime --set \"${line}\" irfanview.desktop 1>/dev/null 2>&1";
+         }
+      which xdg-mime >/dev/null 2>&1 && {
+         xdg-mime default irfanview.desktop "${line}" 1>/dev/null 2>&1
+         getent passwd "${thisuser}" >/dev/null 2>&1 && \
+            su "${thisuser}" -c "xdg-mime default irfanview.desktop \"${line}\" 1>/dev/null 2>&1";
+         }
+   done <<'EOW'
 image/jpeg
 image/gif
 image/png
 image/tiff
 image/bmp
 EOW
+done
 exit 0
 
 %preun
@@ -104,6 +114,10 @@ fi
 /usr/share/irfan/docs/irfan.spec
 /usr/share/irfan/docs/files-for-versioning.txt
 %changelog
+* Fri Dec  2 2016 B Stack <bgstack15@gmail.com>
+- 4.42-4
+- fixing scriptlets to configure mime defaults for my standard users
+
 * Thu Dec  1 2016 B Stack <bgstack15@gmail.com>
 - 4.42-3
 - Official first release across different Fedora versions
