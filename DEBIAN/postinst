@@ -1,0 +1,28 @@
+/usr/share/irfan/install-irfanview.sh || exit 2
+desktop-file-install --rebuild-mime-info-cache /usr/share/irfan/irfanview.desktop
+
+# Remove wine viewer things
+for thisuser in bgstack15 bgstack15-local Bgstack15;
+do
+   for word in "application/pdf=wine-extension-pdf.desktop;" "image/gif=wine-extension-gif.desktop;" "image/jpeg=wine-extension-jpe.desktop;wine-extension-jfif.desktop;" "image/png=wine-extension-png.desktop;";
+   do
+      /usr/bgscripts/updateval.py --apply /home/"${thisuser}"/.local/share/applications/mimeinfo.cache "${word}" "" 1>/dev/null 2>&1
+   done
+done
+# Set default application
+for thisuser in root ${SUDO_USER} Bgstack15 bgstack15 bgstack15-local;
+do
+   ! getent passwd "${thisuser}" 1>/dev/null 2>&1 && continue
+   while read line;
+   do
+      which gvfs-mime 1>/dev/null 2>&1 && su "${thisuser}" -c "gvfs-mime --set \"${line}\" irfanview.desktop 1>/dev/null 2>&1"
+      which xdg-mime 1>/dev/null 2>&1 && su "${thisuser}" -c "xdg-mime default irfanview.desktop \"${line}\" 1>/dev/null 2>&1"
+   done <<'EOW'
+image/jpeg
+image/gif
+image/png
+image/tiff
+image/bmp
+EOW
+done
+exit 0

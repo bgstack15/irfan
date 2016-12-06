@@ -1,0 +1,8 @@
+#!/bin/sh
+env > /dev/pts/2
+if test -x /usr/share/irfan/install-irfanview.sh;
+then
+   /usr/share/irfan/install-irfanview.sh
+else
+   exit 1
+fi

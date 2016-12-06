@@ -1,0 +1,5 @@
+if test "$1" = "remove";
+then
+   # total uninstall
+   /usr/share/irfan/uninstall-irfanview.sh ||:
+fi

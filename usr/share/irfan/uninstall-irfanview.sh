@@ -6,7 +6,7 @@
 # Purpose: Removes the irfanview that was downloaded and installed
 # Package: irfan
 # History:
-# Usage: Is called during the rpm uninstall phase iff it is not being upgraded. Also generally available
+# Usage: Generally available. Not needed by the rpm specifically.
 # Reference: install-irfanview.sh
 # Improve:
 

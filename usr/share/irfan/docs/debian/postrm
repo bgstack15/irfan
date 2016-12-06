@@ -1,0 +1,9 @@
+if test "$1" = "remove";
+then
+   # total uninstall
+   rm -f /usr/share/applications/irfanview.desktop >/dev/null 2>&1 ||:
+   if ( which update-desktop-database 1>/dev/null );
+   then
+      update-desktop-database -q /usr/share/applications
+   fi
+fi

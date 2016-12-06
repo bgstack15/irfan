@@ -3,7 +3,7 @@
 Name:		irfan
 Version:	4.42
 #Release:	3%{?dist}
-Release:	4
+Release:	5
 Summary:	Irfanview 4.42, a graphics viewer
 
 Group:		Applications/Graphics
@@ -29,37 +29,35 @@ Irfanview is an amazing graphics application for a different platform. Using win
 %install
 #%make_install
 rsync -a . %{buildroot}/
+if test -x %{buildroot}/usr/share/irfan/install-irfanview.sh;
+then
+   %{buildroot}/usr/share/irfan/install-irfanview.sh || exit 1
+else
+   :
+fi
 
 %clean
 rm -rf ${buildroot}
 
 %post
-/usr/share/irfan/install-irfanview.sh || exit 2
-desktop-file-install --rebuild-mime-info-cache /usr/share/irfan/irfanview.desktop
+desktop-file-install --rebuild-mime-info-cache /usr/share/irfan/irfanview.desktop 1>/dev/null 2>&1
 
 # Remove wine viewer things
 for thisuser in bgstack15 bgstack15-local Bgstack15;
 do
    for word in "application/pdf=wine-extension-pdf.desktop;" "image/gif=wine-extension-gif.desktop;" "image/jpeg=wine-extension-jpe.desktop;wine-extension-jfif.desktop;" "image/png=wine-extension-png.desktop;";
    do
-      /usr/bgscripts/updateval.py --apply /home/"${thisuser}"/.local/share/applications/mimeinfo.cache "${word}" "" >/dev/null 2&>1
+      /usr/bgscripts/updateval.py --apply /home/"${thisuser}"/.local/share/applications/mimeinfo.cache "${word}" "" 1>/dev/null 2>&1
    done
 done
 # Set default application
-for thisuser in Bgstack15 bgstack15 bgstack15-local ${SUDO_USER};
+for thisuser in root ${SUDO_USER} Bgstack15 bgstack15 bgstack15-local;
 do
+   ! getent passwd "${thisuser}" 1>/dev/null 2>&1 && continue
    while read line;
    do
-      which gvfs-mime >/dev/null 2>&1 && {
-         gvfs-mime --set "${line}" irfanview.desktop 1>/dev/null 2>&1
-         getent passwd "${thisuser}" >/dev/null 2>&1 && \
-            su "${thisuser}" -c "gvfs-mime --set \"${line}\" irfanview.desktop 1>/dev/null 2>&1";
-         }
-      which xdg-mime >/dev/null 2>&1 && {
-         xdg-mime default irfanview.desktop "${line}" 1>/dev/null 2>&1
-         getent passwd "${thisuser}" >/dev/null 2>&1 && \
-            su "${thisuser}" -c "xdg-mime default irfanview.desktop \"${line}\" 1>/dev/null 2>&1";
-         }
+      which gvfs-mime 1>/dev/null 2>&1 && su "${thisuser}" -c "gvfs-mime --set \"${line}\" irfanview.desktop 1>/dev/null 2>&1"
+      which xdg-mime 1>/dev/null 2>&1 && su "${thisuser}" -c "xdg-mime default irfanview.desktop \"${line}\" 1>/dev/null 2>&1"
    done <<'EOW'
 image/jpeg
 image/gif
@@ -71,11 +69,7 @@ done
 exit 0
 
 %preun
-if test "$1" = "0";
-then
-   # total uninstall
-   /usr/share/irfan/uninstall-irfanview.sh ||:
-fi
+exit 0
 
 %postun
 if test "$1" = "0";
@@ -111,12 +105,26 @@ fi
 /usr/share/irfan/docs
 %doc %attr(444, -, -) /usr/share/irfan/docs/packaging.txt
 %doc %attr(444, -, -) /usr/share/irfan/docs/README.txt
+/usr/share/irfan/docs/debian
+/usr/share/irfan/docs/debian/md5sums
+/usr/share/irfan/docs/debian/prerm
+/usr/share/irfan/docs/debian/control
+/usr/share/irfan/docs/debian/preinst
+/usr/share/irfan/docs/debian/rules
+/usr/share/irfan/docs/debian/postinst
+/usr/share/irfan/docs/debian/conffiles
+/usr/share/irfan/docs/debian/postrm
 /usr/share/irfan/docs/irfan.spec
 /usr/share/irfan/docs/files-for-versioning.txt
 %changelog
+* Tue Dec  6 2016 B Stack <bgstack15@gmail.com>
+- 4.42-5
+- fixed rpm install scriptlet
+
 * Fri Dec  2 2016 B Stack <bgstack15@gmail.com>
 - 4.42-4
-- fixing scriptlets to configure mime defaults for my standard users
+- fixed scriptlets to configure mime defaults for my standard users
+- fixed scriptlets and install script to be POSIX sh
 
 * Thu Dec  1 2016 B Stack <bgstack15@gmail.com>
 - 4.42-3

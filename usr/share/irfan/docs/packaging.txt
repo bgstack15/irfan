@@ -12,7 +12,7 @@ Document: Below this line
 ### PACKAGING for rhel/centos/fedora
 rpmbuilddir=~/rpmbuild/
 package=irfan
-version=4.42-4
+version=4.42-5
 shortversion=4.42
 packagespecfile="${package}-${version}/usr/share/${package}/docs/${package}.spec"
 sed -n -e '1,/^\%files$/p;' "${rpmbuilddir}/SOURCES/${packagespecfile}" > "${rpmbuilddir}/SOURCES/${packagespecfile}.swp" #removes files and changelog
@@ -28,9 +28,26 @@ rm -rf "${package}.tgz"; tar -zc --exclude='.git' -f "${package}.tgz" "${package
 cd "${rpmbuilddir}/RPMS/noarch"
 rpmbuild -bb "${rpmbuilddir}/SPECS/${package}.spec"
 
+### PACKAGING for debian
+# You need package dpkg-dev to build packages
+package=irfan
+version=4.42-5
+packagedebfilesdir="${package}-${version}/usr/share/${package}/docs/debian"
+cd ~/deb/"${package}-${version}"
+find . -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' ! -regex '.*?.swp' ! -regex '.*\.git.*' -printf '%P ' | xargs md5sum > ~/deb/"${packagedebfilesdir}"/md5sums
+rm -rf ~/deb/"${package}-${version}"/DEBIAN/ 2>/dev/null; mkdir -p ~/deb/"${package}-${version}"/DEBIAN/
+cp -pf ~/deb/"${packagedebfilesdir}"/* ~/deb/"${package}-${version}"/DEBIAN/
+cd ~/deb
+rm -rf ~/deb/"${package}-${version}.a"
+cp -pR ~/deb/"${package}-${version}" ~/deb/"${package}-${version}.a"
+rm -rf ~/deb/"${package}-${version}"/.git
+dpkg-deb -b ~/deb/"${package}-${version}"
+rm -rf ~/deb/"${package}-${version}"
+mv ~/deb/"${package}-${version}.a" ~/deb/"${package}-${version}"
+
 ### PACKAGING in a master.tgz
 cd ~/deb || cd ~/rpmbuild/SOURCES
 package=irfan
-version=4.42-4
+version=4.42-5
 rm -rf ./"${package}-${version}".master.tgz
 tar -zcf ./"${package}-${version}".master.tgz "${package}-${version}"/
