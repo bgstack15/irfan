@@ -7,7 +7,7 @@ devtty=/dev/null
 
 # prepare files
 irfanargs=
-if [[ -n "$@" ]];
+if test -n "$@";
 then
    for word in "$@";
    do

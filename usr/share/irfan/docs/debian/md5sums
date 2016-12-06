@@ -1,6 +1,6 @@
 7a540108f26b7cc315ff46e594dbad48  usr/share/irfan/irfanview.desktop
 b85b5ede77271a7ce11fe8161794c6b9  usr/share/irfan/install-irfanview.sh
-e086d19ab83325d50614060bb4ce9902  usr/share/irfan/irfan.sh
+f0d723edf689ed081db63d61acb15b95  usr/share/irfan/irfan.sh
 0a1d00ce66072588fcb2bfd6c322e2bc  usr/share/irfan/uninstall-irfanview.sh
 549c01f960f944910831ed53df7360eb  usr/share/irfan/inc/i_view32.ini
 f5912ffeb832593d21a7892357b283f5  usr/share/irfan/inc/irfan-vlc.sh
@@ -14,12 +14,11 @@ d67ec8985c1d61a555b626450730ac3f  usr/share/irfan/inc/irfanview32x32.png
 125f702de91d3a098cd8dde190ba1c6a  usr/share/irfan/docs/files-for-versioning.txt
 0d6657ab0b45b2c04ac8d74c3382a817  usr/share/irfan/docs/debian/conffiles
 d41d8cd98f00b204e9800998ecf8427e  usr/share/irfan/docs/debian/preinst
-79d5d495e20f636482f7c53e82bca5b8  usr/share/irfan/docs/debian/rules
 76fc1c124171a8e14ac8d8966cb94647  usr/share/irfan/docs/debian/prerm
 fab43f78b5eeb2c9fdf55af5e4ab7dba  usr/share/irfan/docs/debian/postrm
-1646ef0375e6fb1f44802fa63d4968aa  usr/share/irfan/docs/debian/md5sums
+e641c1a5cf6de00b53a90a620ab85e3a  usr/share/irfan/docs/debian/md5sums
 72b0a909f31497a8a04d518ac8463ca5  usr/share/irfan/docs/debian/control
-5f1cc1135fe4bdb9ba17e6ca53f73400  usr/share/irfan/docs/debian/postinst
-447b7d2a3c490d8891519f2548cc0431  usr/share/irfan/docs/irfan.spec
+0f670749878211c20c66673c2ed1f6da  usr/share/irfan/docs/debian/postinst
+02023e30f7c4835d2f486d4c86ff6f59  usr/share/irfan/docs/irfan.spec
 3dad5477aa63d3e4b8dfd1d26a646647  usr/share/irfan/docs/packaging.txt
 2033715303dcf13ced17d7df2548da3a  usr/share/irfan/docs/README.txt

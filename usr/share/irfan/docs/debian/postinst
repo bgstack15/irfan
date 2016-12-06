@@ -2,7 +2,7 @@
 desktop-file-install --rebuild-mime-info-cache /usr/share/irfan/irfanview.desktop
 
 # Remove wine viewer things
-for thisuser in bgstack15 bgstack15-local Bgstack15;
+for thisuser in ${SUDO_USER} bgstack15 bgstack15-local Bgstack15;
 do
    for word in "application/pdf=wine-extension-pdf.desktop;" "image/gif=wine-extension-gif.desktop;" "image/jpeg=wine-extension-jpe.desktop;wine-extension-jfif.desktop;" "image/png=wine-extension-png.desktop;";
    do

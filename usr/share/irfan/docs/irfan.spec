@@ -110,7 +110,6 @@ fi
 /usr/share/irfan/docs/debian/prerm
 /usr/share/irfan/docs/debian/control
 /usr/share/irfan/docs/debian/preinst
-/usr/share/irfan/docs/debian/rules
 /usr/share/irfan/docs/debian/postinst
 /usr/share/irfan/docs/debian/conffiles
 /usr/share/irfan/docs/debian/postrm
