@@ -44,7 +44,6 @@ which xdg-icon-resource 1>/dev/null 2>&1 && {
    do
       for thistheme in hicolor locolor Numix-Circle;
       do
-      # hicolor theme, the default
       thisshape=square
       case "${thistheme}" in
          Numix-Circle) thisshape=round;;
@@ -52,12 +51,12 @@ which xdg-icon-resource 1>/dev/null 2>&1 && {
       xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{buildroot}/usr/share/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan 1>/dev/null 2>&1
       done
    done
-   test -d %{_prefix}/share/icons/hicolor/scalable/ && cp -p %{buildroot}/usr/share/irfan/inc/icons/irfan.svg %{_prefix}/share/icons/hicolor/scalable/ 1>/dev/null 2>&1
+   test -d %{_datarootdir}/icons/hicolor/scalable/ && cp -p %{buildroot}/usr/share/irfan/inc/icons/irfan.svg %{_datarootdir}/icons/hicolor/scalable/ 1>/dev/null 2>&1
    xdg-icon-resource forceupdate 1>/dev/null 2>&1
 }
 
 # Deploy desktop file
-desktop-file-install --rebuild-mime-info-cache /usr/share/irfan/irfanview.desktop 1>/dev/null 2>&1
+desktop-file-install --rebuild-mime-info-cache %{buildroot}/usr/share/irfan/irfanview.desktop 1>/dev/null 2>&1
 
 # Remove wine viewer things
 for thisuser in bgstack15 bgstack15-local Bgstack15;
@@ -92,13 +91,30 @@ exit 0
 if test "$1" = "0";
 then
    # total uninstall
-   rm -f /usr/share/applications/irfanview.desktop >/dev/null 2>&1 ||:
+   
+   # Remove desktop file
+   rm -f %{_datarootdir}/applications/irfanview.desktop >/dev/null 2>&1 ||:
    if ( which update-desktop-database 1>/dev/null );
    then
-      update-desktop-database -q /usr/share/applications
+      update-desktop-database -q %{_datarootdir}/applications
    fi
 
    # Remove icons
+   which xdg-icon-resource 1>/dev/null 2>&1 && {
+      for num in 16 24 32 48 64;
+         do
+         for thistheme in hicolor locolor Numix-Circle;
+         do
+         thisshape=square
+         case "${thistheme}" in
+            Numix-Circle) thisshape=round;;
+         esac
+         xdg-icon-resource uninstall --context apps --size "${num}" --theme "${thistheme}" --noupdate irfan 1>/dev/null 2>&1
+         done
+      done
+      rm -f %{_datarootdir}/icons/hicolor/scalable/irfan.svg 1>/dev/null 2>&1
+      xdg-icon-resource forceupdate 1>/dev/null 2>&1
+   }
 fi
 
 %files
