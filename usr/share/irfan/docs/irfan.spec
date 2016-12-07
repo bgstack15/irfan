@@ -1,13 +1,11 @@
-# spec file for irfanview 4.42 compiled from template and by hand
-# bgscripts15@gmail.com
 Name:		irfan
 Version:	4.42
 #Release:	3%{?dist}
-Release:	5
+Release:	6
 Summary:	Irfanview 4.42, a graphics viewer
 
 Group:		Applications/Graphics
-License:	Installer is CC-BY-SA
+License:	Installer is CC-BY-SA, application is freeware
 URL:		http://bgstack15.wordpress.com
 Source0:	irfan.tgz
 
@@ -29,7 +27,7 @@ Irfanview is an amazing graphics application for a different platform. Using win
 %install
 #%make_install
 rsync -a . %{buildroot}/
-if test -x %{buildroot}/usr/share/irfan/install-irfanview.sh;
+if test -x %{buildroot}/usr/share/irfan/install-irfanview.shWORKHERE;
 then
    %{buildroot}/usr/share/irfan/install-irfanview.sh || exit 1
 else
@@ -40,6 +38,25 @@ fi
 rm -rf ${buildroot}
 
 %post
+# Deploy icons
+which xdg-icon-resource 1>/dev/null 2>&1 && {
+   for num in 16 24 32 48 64;
+   do
+      for thistheme in hicolor locolor Numix-Circle;
+      do
+      # hicolor theme, the default
+      thisshape=square
+      case "${thistheme}" in
+         Numix-Circle) thisshape=round;;
+      esac
+      xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{buildroot}/usr/share/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan 1>/dev/null 2>&1
+      done
+   done
+   test -d %{_prefix}/share/icons/hicolor/scalable/ && cp -p %{buildroot}/usr/share/irfan/inc/icons/irfan.svg %{_prefix}/share/icons/hicolor/scalable/ 1>/dev/null 2>&1
+   xdg-icon-resource forceupdate 1>/dev/null 2>&1
+}
+
+# Deploy desktop file
 desktop-file-install --rebuild-mime-info-cache /usr/share/irfan/irfanview.desktop 1>/dev/null 2>&1
 
 # Remove wine viewer things
@@ -80,6 +97,8 @@ then
    then
       update-desktop-database -q /usr/share/applications
    fi
+
+   # Remove icons
 fi
 
 %files

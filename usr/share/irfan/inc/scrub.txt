@@ -1,5 +1,5 @@
 # scrubpyversion 2016-11-16a or newer
-source /home/bgstack15-local/rpmbuild/SOURCES/irfan-4.42-5
+source /home/bgstack15-local/rpmbuild/SOURCES/irfan-4.42-6
 target /home/work/irfan.clean
 ignore "tgz png gif jpg git swp ico ini"
 BGSTACK15	BGSTACK15

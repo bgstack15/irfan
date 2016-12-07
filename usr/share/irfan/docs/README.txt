@@ -17,7 +17,10 @@ Wine 1.9
 Irfanview 4.42 and all plugins http://www.irfanview.com/download_sites.htm 
 
 ###License
-Irfanview is closed-source. Everything else is either GPL or CC-BY-SA.
+Irfanview is closed-source (freeware). Everything else is either GPL or CC-BY-SA4.0.
+
+###Credits
+Icon derived from a source at http://www.onlinewebfonts.com/icon, licensed CC BY 3.0
 
 ###Bugs
 The font is weird in the dialogs, but is still mostly usable. This bug is not present when using wine 1.3.33 in PlayOnLinux, but I was not able to reproduce the effect with wine 1.8, because I don't know what I'm doing.
@@ -32,14 +35,14 @@ sha256sum !(sha256sum.txt) > sha256sum.txt
 curl http://mirror/bgscripts/irfanview/sha256sum.txt > ~/rpmbuild/irfan-4.42-3/usr/share/irfan/inc/sha256sum.txt
 
 ###Future use
-# maybe do this, in case the irfanview.desktop modification was not helpful. Add these to a mimetype list, probably ~/.local/share/applications/mimeapps.list
+# Mimetype list, probably ~/.local/share/applications/mimeapps.list
 [Default Applications]
 image/png=irfanview.desktop
 image/jpeg=irfanview.desktop
 image/tiff=irfanview.desktop
 image/bmp=irfanview.desktop
 image/gif=irfanview.desktop
-# files to add that stuff to?
+# possible locations
 /usr/share/applications/gnome-mimeapps.list
 /usr/share/applications/mimeapps.list
 /usr/share/applications/xfce-mimeapps.list
@@ -47,4 +50,3 @@ image/gif=irfanview.desktop
 /usr/share/applications/x-cinnamon-mimeapps.list
 /usr/share/applications/mimeinfo.cache
 ~/.local/share/applications/mimeinfo.cache
-# commands to look for? xdg-mime default; xdg-open; gvfs-mime --set; 
