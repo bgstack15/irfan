@@ -51,7 +51,8 @@ which xdg-icon-resource 1>/dev/null 2>&1 && {
       xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{buildroot}/usr/share/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan 1>/dev/null 2>&1
       done
    done
-   test -d %{_datarootdir}/icons/hicolor/scalable/ && cp -p %{buildroot}/usr/share/irfan/inc/icons/irfan.svg %{_datarootdir}/icons/hicolor/scalable/ 1>/dev/null 2>&1
+   test -d %{_datarootdir}/icons/hicolor/scalable/ && \
+      for word in scalable 48x48; do cp -p %{buildroot}/usr/share/irfan/inc/icons/irfan.svg %{_datarootdir}/icons/hicolor/${word}/apps/irfan.svg 1>/dev/null 2>&1; done
    xdg-icon-resource forceupdate 1>/dev/null 2>&1
 }
 
@@ -112,7 +113,7 @@ then
          xdg-icon-resource uninstall --context apps --size "${num}" --theme "${thistheme}" --noupdate irfan 1>/dev/null 2>&1
          done
       done
-      rm -f %{_datarootdir}/icons/hicolor/scalable/irfan.svg 1>/dev/null 2>&1
+      for word in scalable 48x48; do rm -f %{_datarootdir}/icons/hicolor/${word}/apps/irfan.svg 1>/dev/null 2>&1; done
       xdg-icon-resource forceupdate 1>/dev/null 2>&1
    }
 fi
@@ -131,6 +132,23 @@ fi
 %attr(755, -, -) /usr/share/irfan/inc/irfan-vlc.sh
 /usr/share/irfan/inc/irfanview32x32.png
 %attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
+/usr/share/irfan/inc/icons
+/usr/share/irfan/inc/icons/irfan-64-clear.png
+/usr/share/irfan/inc/icons/irfan-48-square.png
+/usr/share/irfan/inc/icons/irfan-48-round.png
+/usr/share/irfan/inc/icons/irfan-16-square.png
+/usr/share/irfan/inc/icons/irfan-48-clear.png
+/usr/share/irfan/inc/icons/irfan-24-square.png
+/usr/share/irfan/inc/icons/irfan-64-square.png
+/usr/share/irfan/inc/icons/irfan-32-clear.png
+/usr/share/irfan/inc/icons/irfan-32-round.png
+/usr/share/irfan/inc/icons/irfan-24-clear.png
+/usr/share/irfan/inc/icons/irfan.svg
+/usr/share/irfan/inc/icons/irfan-16-round.png
+/usr/share/irfan/inc/icons/irfan-64-round.png
+/usr/share/irfan/inc/icons/irfan-32-square.png
+/usr/share/irfan/inc/icons/irfan-16-clear.png
+/usr/share/irfan/inc/icons/irfan-24-round.png
 %attr(755, -, -) /usr/share/irfan/install-irfanview.sh
 %attr(644, -, -) /usr/share/irfan/irfanview.desktop
 /usr/share/irfan/irfanview
