@@ -27,7 +27,7 @@ Irfanview is an amazing graphics application for a different platform. Using win
 %install
 #%make_install
 rsync -a . %{buildroot}/
-if test -x %{buildroot}/usr/share/irfan/install-irfanview.shWORKHERE;
+if test -x %{buildroot}/usr/share/irfan/install-irfanview.sh;
 then
    %{buildroot}/usr/share/irfan/install-irfanview.sh || exit 1
 else
@@ -48,11 +48,16 @@ which xdg-icon-resource 1>/dev/null 2>&1 && {
       case "${thistheme}" in
          Numix-Circle) thisshape=round;;
       esac
-      xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{buildroot}/usr/share/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan 1>/dev/null 2>&1
+      if test "${num}" = "48";
+      then
+         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{buildroot}/usr/share/irfan/inc/icons/irfan-{thisshape}.svg irfan 1>/dev/null 2>&1
+      else
+         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{buildroot}/usr/share/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan 1>/dev/null 2>&1
+      fi
       done
    done
    test -d %{_datarootdir}/icons/hicolor/scalable/ && \
-      for word in scalable 48x48; do cp -p %{buildroot}/usr/share/irfan/inc/icons/irfan.svg %{_datarootdir}/icons/hicolor/${word}/apps/irfan.svg 1>/dev/null 2>&1; done
+      for word in scalable 48x48; do cp -p %{buildroot}/usr/share/irfan/inc/icons/irfan-square.svg %{_datarootdir}/icons/hicolor/${word}/apps/irfan.svg 1>/dev/null 2>&1; done
    xdg-icon-resource forceupdate 1>/dev/null 2>&1
 }
 
@@ -133,7 +138,9 @@ fi
 /usr/share/irfan/inc/irfanview32x32.png
 %attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
 /usr/share/irfan/inc/icons
+/usr/share/irfan/inc/icons/irfan-circle.svg
 /usr/share/irfan/inc/icons/irfan-64-clear.png
+/usr/share/irfan/inc/icons/irfan-square.svg
 /usr/share/irfan/inc/icons/irfan-48-square.png
 /usr/share/irfan/inc/icons/irfan-48-round.png
 /usr/share/irfan/inc/icons/irfan-16-square.png
@@ -141,9 +148,9 @@ fi
 /usr/share/irfan/inc/icons/irfan-24-square.png
 /usr/share/irfan/inc/icons/irfan-64-square.png
 /usr/share/irfan/inc/icons/irfan-32-clear.png
+/usr/share/irfan/inc/icons/irfan-clear.svg
 /usr/share/irfan/inc/icons/irfan-32-round.png
 /usr/share/irfan/inc/icons/irfan-24-clear.png
-/usr/share/irfan/inc/icons/irfan.svg
 /usr/share/irfan/inc/icons/irfan-16-round.png
 /usr/share/irfan/inc/icons/irfan-64-round.png
 /usr/share/irfan/inc/icons/irfan-32-square.png
