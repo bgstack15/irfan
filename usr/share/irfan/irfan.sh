@@ -14,7 +14,10 @@ then
       echo "word=${word}" > ${devtty}
       thisfile="$( printf "${word}" | sed -e '/^.$/d;s!^\.!!;' )"
       echo "${thisfile}" | grep -qiE "^/" && : || thisfile="$( printf "%s%s" "$( pwd )/" "${thisfile}" )"
-      thisfile="$( echo "${thisfile}" | sed -e 's!^!z:/!;s!\/!\\!g;s!\\\+!\\!g;' )"
+      thisfile="$( echo "${thisfile}" | sed -e 's!^!z:/!;' -e 's!\/\+!\/!g;' )"
+      _tmp='\\'
+      grep -qiE "ubuntu|debian" /etc/*release 2>/dev/null && _tmp='\\\\'
+      thisfile="$( echo "${thisfile}" | sed -e 's!\/!'"${_tmp}"'!g;' )"
       if test ! -d "${word}";
       then
          echo "${thisfile}" > ${devtty}

@@ -1,4 +1,27 @@
 /usr/share/irfan/install-irfanview.sh || exit 2
+# Deploy icons
+which xdg-icon-resource 1>/dev/null 2>&1 && {
+   for num in 16 24 32 48 64;
+   do
+      for thistheme in hicolor locolor Lubuntu;
+      do
+      thisshape=square
+      case "${thistheme}" in
+         Numix-Circle) thisshape=round;;
+      esac
+      if test "${num}" = "48";
+      then
+         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate /usr/share/irfan/inc/icons/irfan-{thisshape}.svg irfan 1>/dev/null 2>&1
+      else
+         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate /usr/share/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan 1>/dev/null 2>&1
+      fi
+      done
+   done
+   test -d /usr/share/icons/hicolor/scalable/ && \
+      for word in scalable 48x48; do cp -p /usr/share/irfan/inc/icons/irfan-square.svg /usr/share/icons/hicolor/${word}/apps/irfan.svg 1>/dev/null 2>&1; done
+   xdg-icon-resource forceupdate 1>/dev/null 2>&1
+}
+
 desktop-file-install --rebuild-mime-info-cache /usr/share/irfan/irfanview.desktop
 
 # Remove wine viewer things
@@ -9,6 +32,7 @@ do
       /usr/bgscripts/updateval.py --apply /home/"${thisuser}"/.local/share/applications/mimeinfo.cache "${word}" "" 1>/dev/null 2>&1
    done
 done
+
 # Set default application
 for thisuser in root ${SUDO_USER} Bgstack15 bgstack15 bgstack15-local;
 do
