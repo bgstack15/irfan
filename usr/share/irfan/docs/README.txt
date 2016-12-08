@@ -3,6 +3,10 @@ Irfan README
 Irfanview is an image viewer for Windows. Irfan is an rpm that wraps around the application so, with wine, the application will run on Linux.
 http://www.irfanview.com/
 
+To send multiple files from the command line to irfan at once, you might need to use xargs -0 like this:
+find . -print0 | xargs -0 /usr/share/irfan/irfan.sh
+If there are spaces in the filenames, it will break parsing unless you use the null character as a separator.
+
 ###Authors
 Irfan Skiljan http://www.irfanview.com/
 bgstack15@gmail.com http://bgstack15.wordpress.com/
@@ -11,9 +15,11 @@ bgstack15@gmail.com http://bgstack15.wordpress.com/
 wine
    Wine should be configured to mount z:\ as the linux / (root) directory for Irfanview to operate correctly when directly opening files.
 
-###Build environment
+###Test environments
 Korora 24 Xfce
-Wine 1.9
+Korora 24 Cinnamon
+Fedora 25 Cinnamon
+Lubuntu 16.10 Lxde
 Irfanview 4.42 and all plugins http://www.irfanview.com/download_sites.htm 
 
 ###License
