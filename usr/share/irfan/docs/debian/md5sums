@@ -37,6 +37,6 @@ b843ec1440b83f769f4fa559c1f4927c  usr/share/irfan/docs/debian/postrm
 d1770b1fa3b3f3483212afcfb263cb3d  usr/share/irfan/docs/debian/md5sums
 27398fed9b7bd026f92e9bcc61a1e21b  usr/share/irfan/docs/debian/control
 93fdf9cbb3b5ca52cf509a84b8f32e5e  usr/share/irfan/docs/debian/postinst
-533b0a5b797d63b5e75ab6db6e333a6d  usr/share/irfan/docs/irfan.spec
+27c7ce08e64ac2ff48b07e7292f332a3  usr/share/irfan/docs/irfan.spec
 03df4ba068c89553598657b0679e9bf6  usr/share/irfan/docs/packaging.txt
-501890faf54b885c2b2addfec61a4436  usr/share/irfan/docs/README.txt
+e184e0d3d4c9f148d935847cf36e7743  usr/share/irfan/docs/README.txt

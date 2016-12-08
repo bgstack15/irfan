@@ -27,15 +27,15 @@ Irfanview is an amazing graphics application for a different platform. Using win
 %install
 #%make_install
 rsync -a . %{buildroot}/
-if test -x %{buildroot}/usr/share/irfan/install-irfanview.sh;
+if test -x %{buildroot}%{_datarootdir}/irfan/install-irfanview.sh;
 then
-   %{buildroot}/usr/share/irfan/install-irfanview.sh || exit 1
+   %{buildroot}%{_datarootdir}/irfan/install-irfanview.sh || exit 1
 else
    :
 fi
 
 %clean
-rm -rf ${buildroot}
+rm -rf %{buildroot}
 
 %post
 # Deploy icons
@@ -50,19 +50,19 @@ which xdg-icon-resource 1>/dev/null 2>&1 && {
       esac
       if test "${num}" = "48";
       then
-         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{buildroot}/usr/share/irfan/inc/icons/irfan-{thisshape}.svg irfan 1>/dev/null 2>&1
+         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{_datarootdir}/irfan/inc/icons/irfan-{thisshape}.svg irfan 1>/dev/null 2>&1
       else
-         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{buildroot}/usr/share/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan 1>/dev/null 2>&1
+         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{_datarootdir}/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan 1>/dev/null 2>&1
       fi
       done
    done
    test -d %{_datarootdir}/icons/hicolor/scalable/ && \
-      for word in scalable 48x48; do cp -p %{buildroot}/usr/share/irfan/inc/icons/irfan-square.svg %{_datarootdir}/icons/hicolor/${word}/apps/irfan.svg 1>/dev/null 2>&1; done
+      for word in scalable 48x48; do cp -p %{_datarootdir}/irfan/inc/icons/irfan-square.svg %{_datarootdir}/icons/hicolor/${word}/apps/irfan.svg 1>/dev/null 2>&1; done
    xdg-icon-resource forceupdate 1>/dev/null 2>&1
 }
 
 # Deploy desktop file
-desktop-file-install --rebuild-mime-info-cache %{buildroot}/usr/share/irfan/irfanview.desktop 1>/dev/null 2>&1
+desktop-file-install --rebuild-mime-info-cache %{_datarootdir}/irfan/irfanview.desktop 1>/dev/null 2>&1
 
 # Remove wine viewer things
 for thisuser in bgstack15 bgstack15-local Bgstack15;
