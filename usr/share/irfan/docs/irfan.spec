@@ -1,7 +1,7 @@
 Name:		irfan
-Version:	4.42
+Version:	4.44
 #Release:	3%{?dist}
-Release:	6
+Release:	1
 Summary:	Irfanview 4.42, a graphics viewer
 
 Group:		Applications/Graphics
@@ -15,6 +15,8 @@ Buildarch:	noarch
 Requires:	wine >= 1.3
 Requires(pre):	bgscripts >= 1.1-20, curl, p7zip
 
+Provides:	application(irfanview.desktop)
+
 %description
 Irfanview is an amazing graphics application for a different platform. Using wine, you can run irfanview on Linux.
 
@@ -27,9 +29,9 @@ Irfanview is an amazing graphics application for a different platform. Using win
 %install
 #%make_install
 rsync -a . %{buildroot}/
-if test -x %{buildroot}%{_datarootdir}/irfan/install-irfanview.sh;
+if test -x %{buildroot}%{_datarootdir}/%{name}/install-irfanview.sh;
 then
-   %{buildroot}%{_datarootdir}/irfan/install-irfanview.sh || exit 1
+   %{buildroot}%{_datarootdir}/%{name}/install-irfanview.sh || exit 1
 else
    :
 fi
@@ -38,31 +40,40 @@ fi
 rm -rf %{buildroot}
 
 %post
+# rpm post 2017-01-02
 # Deploy icons
 which xdg-icon-resource 1>/dev/null 2>&1 && {
    for num in 16 24 32 48 64;
    do
+      # Deploy application icons
       for thistheme in hicolor locolor Numix-Circle;
       do
       thisshape=square
       case "${thistheme}" in
          Numix-Circle) thisshape=round;;
       esac
-      if test "${num}" = "48";
-      then
-         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{_datarootdir}/irfan/inc/icons/irfan-{thisshape}.svg irfan 1>/dev/null 2>&1
-      else
-         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{_datarootdir}/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan 1>/dev/null 2>&1
-      fi
+      xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{_datarootdir}/%{name}/inc/icons/%{name}-${num}-${thisshape}.png irfan &
       done
    done
-   test -d %{_datarootdir}/icons/hicolor/scalable/ && \
-      for word in scalable 48x48; do cp -p %{_datarootdir}/irfan/inc/icons/irfan-square.svg %{_datarootdir}/icons/hicolor/${word}/apps/irfan.svg 1>/dev/null 2>&1; done
-   xdg-icon-resource forceupdate 1>/dev/null 2>&1
-}
+
+   # Deploy scalable application icons
+   # custom: Numix-Circle for Korora uses svg
+   cp -p %{_prefix}/%{name}/inc/icons/%{name}-circle.svg %{_datarootdir}/icons/Numix-Circle/48/apps/irfan.svg &
+   # default
+   cp -p %{_datarootdir}/%{name}/inc/icons/%{name}-48-square.png %{_datarootdir}/icons/hicolor/48x48/apps/irfan.png
+   cp -p %{_datarootdir}/%{name}/inc/icons/%{name}-square.svg %{_datarootdir}/icons/hicolor/scalable/apps/irfan.svg
+
+   # Update icon caches
+   xdg-icon-resource forceupdate &
+   for word in hicolor locolor Numix-Circle Numix Lubuntu elementary-xfce;
+   do
+      touch --no-create %{_datarootdir}/icons/${word}
+      gtk-update-icon-cache %{_datarootdir}/icons/${word} &
+   done
+} 1>/dev/null 2>&1
 
 # Deploy desktop file
-desktop-file-install --rebuild-mime-info-cache %{_datarootdir}/irfan/irfanview.desktop 1>/dev/null 2>&1
+desktop-file-install --rebuild-mime-info-cache %{_datarootdir}/%{name}/irfanview.desktop 1>/dev/null 2>&1
 
 # Remove wine viewer things
 for thisuser in bgstack15 bgstack15-local Bgstack15;
@@ -72,14 +83,27 @@ do
       /usr/bgscripts/updateval.py --apply /home/"${thisuser}"/.local/share/applications/mimeinfo.cache "${word}" "" 1>/dev/null 2>&1
    done
 done
+
 # Set default application
 for thisuser in root ${SUDO_USER} Bgstack15 bgstack15 bgstack15-local;
 do
-   ! getent passwd "${thisuser}" 1>/dev/null 2>&1 && continue
+{
+   ! getent passwd "${thisuser}" && continue
    while read line;
    do
-      which gvfs-mime 1>/dev/null 2>&1 && su "${thisuser}" -c "gvfs-mime --set \"${line}\" irfanview.desktop 1>/dev/null 2>&1"
-      which xdg-mime 1>/dev/null 2>&1 && su "${thisuser}" -c "xdg-mime default irfanview.desktop \"${line}\" 1>/dev/null 2>&1"
+      which xdg-mime && {
+         #su "${thisuser}" -c "xdg-mime install %{_prefix}/%{name}/inc/nonedefined.xml &"
+         su "${thisuser}" -c "xdg-mime default irfanview.desktop ${line} &"
+      }
+      which gio && {
+         su "${thisuser}" -c "gio mime  ${line} irfanview.desktop &"
+      }
+      #which update-mime-database && {
+      #   case "${thisuser}" in
+      #      root) update-mime-database %{_datarootdir}/mime & ;;
+      #      *) su "${thisuser}" -c "update-mime-database ~${thisuser}/.local/share/mime &";;
+      #   esac
+      #}
    done <<'EOW'
 image/jpeg
 image/gif
@@ -87,95 +111,115 @@ image/png
 image/tiff
 image/bmp
 EOW
+} 1>/dev/null 2>&1
 done
 exit 0
 
 %preun
+# rpm preun 2017-01-02
+# if I ever need preun Remove mimetype definitions, check freefilesync.rpm
 exit 0
 
 %postun
+# rpm postun 2017-01-02
 if test "$1" = "0";
 then
+{
    # total uninstall
    
    # Remove desktop file
-   rm -f %{_datarootdir}/applications/irfanview.desktop >/dev/null 2>&1 ||:
-   if ( which update-desktop-database 1>/dev/null );
-   then
-      update-desktop-database -q %{_datarootdir}/applications
-   fi
+   rm -f %{_datarootdir}/applications/irfanview.desktop
+   which update-desktop-database && update-desktop-database -q %{_datarootdir}/applications &
 
    # Remove icons
-   which xdg-icon-resource 1>/dev/null 2>&1 && {
+   which xdg-icon-resource && {
       for num in 16 24 32 48 64;
-         do
+      do
+         # Remove application icons
          for thistheme in hicolor locolor Numix-Circle;
          do
-         thisshape=square
-         case "${thistheme}" in
-            Numix-Circle) thisshape=round;;
-         esac
-         xdg-icon-resource uninstall --context apps --size "${num}" --theme "${thistheme}" --noupdate irfan 1>/dev/null 2>&1
+            xdg-icon-resource uninstall --context apps --size "${num}" --theme "${thistheme}" --noupdate irfan &
          done
       done
-      for word in scalable 48x48; do rm -f %{_datarootdir}/icons/hicolor/${word}/apps/irfan.svg 1>/dev/null 2>&1; done
-      xdg-icon-resource forceupdate 1>/dev/null 2>&1
+
+      # Remove scalable application icons
+      # custom: Numix-Circle for Korora uses svg
+      rm -f %{_datarootdir}/icons/Numix-Circle/48/apps/irfan.svg
+      # default
+      rm -f %{_datarootdir}/icons/hicolor/48x48/apps/irfan.png
+      rm -f %{_datarootdir}/icons/hicolor/scalable/apps/irfan.svg
+
+      # Update icon caches
+      xdg-icon-resource forceupdate &
+      for word in hicolor locolor Numix-Circle Numix Lubuntu elementary-xfce;
+      do
+         touch --no-create %{_datarootdir}/icons/${word}
+         gtk-update-icon-cache %{_datarootdir}/icons/${word} &
+      done
    }
+} 1>/dev/null 2>&1
 fi
+exit 0
 
 %files
 /usr
 /usr/share
 /usr/share/irfan
+%attr(755, -, -) /usr/share/irfan/irfan.sh
+/usr/share/irfan/irfanview
+/usr/share/irfan/source
 /usr/share/irfan/inc
 /usr/share/irfan/inc/irfan_ver.txt
-%config %attr(666, -, -) /usr/share/irfan/inc/i_view32.ini
-/usr/share/irfan/inc/irfanview64x64.png
-/usr/share/irfan/inc/sha256sum.txt
 /usr/share/irfan/inc/scrub.txt
+%config %attr(666, -, -) /usr/share/irfan/inc/i_view32.ini
+/usr/share/irfan/inc/sha256sum.txt
 /usr/share/irfan/inc/winetricks
 %attr(755, -, -) /usr/share/irfan/inc/irfan-vlc.sh
-/usr/share/irfan/inc/irfanview32x32.png
-%attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
+/usr/share/irfan/inc/pack
+/usr/share/irfan/inc/irfanview64x64.png
 /usr/share/irfan/inc/icons
-/usr/share/irfan/inc/icons/irfan-circle.svg
-/usr/share/irfan/inc/icons/irfan-64-clear.png
-/usr/share/irfan/inc/icons/irfan-square.svg
-/usr/share/irfan/inc/icons/irfan-48-square.png
-/usr/share/irfan/inc/icons/irfan-48-round.png
-/usr/share/irfan/inc/icons/irfan-16-square.png
-/usr/share/irfan/inc/icons/irfan-48-clear.png
-/usr/share/irfan/inc/icons/irfan-24-square.png
-/usr/share/irfan/inc/icons/irfan-64-square.png
-/usr/share/irfan/inc/icons/irfan-32-clear.png
 /usr/share/irfan/inc/icons/irfan-clear.svg
-/usr/share/irfan/inc/icons/irfan-32-round.png
-/usr/share/irfan/inc/icons/irfan-24-clear.png
+/usr/share/irfan/inc/icons/irfan-16-square.png
 /usr/share/irfan/inc/icons/irfan-16-round.png
-/usr/share/irfan/inc/icons/irfan-64-round.png
-/usr/share/irfan/inc/icons/irfan-32-square.png
+/usr/share/irfan/inc/icons/irfan-48-clear.png
+/usr/share/irfan/inc/icons/irfan-32-round.png
+/usr/share/irfan/inc/icons/irfan-64-clear.png
 /usr/share/irfan/inc/icons/irfan-16-clear.png
 /usr/share/irfan/inc/icons/irfan-24-round.png
-%attr(755, -, -) /usr/share/irfan/install-irfanview.sh
-%attr(644, -, -) /usr/share/irfan/irfanview.desktop
-/usr/share/irfan/irfanview
+/usr/share/irfan/inc/icons/irfan-32-square.png
+/usr/share/irfan/inc/icons/irfan-24-clear.png
+/usr/share/irfan/inc/icons/irfan-circle.svg
+/usr/share/irfan/inc/icons/irfan-24-square.png
+/usr/share/irfan/inc/icons/irfan-64-square.png
+/usr/share/irfan/inc/icons/irfan-48-round.png
+/usr/share/irfan/inc/icons/irfan-32-clear.png
+/usr/share/irfan/inc/icons/irfan-square.svg
+/usr/share/irfan/inc/icons/irfan-48-square.png
+/usr/share/irfan/inc/icons/irfan-64-round.png
+%attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
+/usr/share/irfan/inc/irfanview32x32.png
 %attr(755, -, -) /usr/share/irfan/uninstall-irfanview.sh
-/usr/share/irfan/source
-%attr(755, -, -) /usr/share/irfan/irfan.sh
 /usr/share/irfan/docs
-%doc %attr(444, -, -) /usr/share/irfan/docs/packaging.txt
 %doc %attr(444, -, -) /usr/share/irfan/docs/README.txt
 /usr/share/irfan/docs/debian
-/usr/share/irfan/docs/debian/md5sums
+/usr/share/irfan/docs/debian/postinst
 /usr/share/irfan/docs/debian/prerm
 /usr/share/irfan/docs/debian/control
-/usr/share/irfan/docs/debian/preinst
-/usr/share/irfan/docs/debian/postinst
 /usr/share/irfan/docs/debian/conffiles
 /usr/share/irfan/docs/debian/postrm
+/usr/share/irfan/docs/debian/md5sums
+/usr/share/irfan/docs/debian/preinst
+%doc %attr(444, -, -) /usr/share/irfan/docs/packaging.txt
 /usr/share/irfan/docs/irfan.spec
 /usr/share/irfan/docs/files-for-versioning.txt
+%attr(755, -, -) /usr/share/irfan/install-irfanview.sh
+%attr(644, -, -) /usr/share/irfan/irfanview.desktop
 %changelog
+* Mon Jan  2 2017 B Stack <bgstack15@gmail.com>
+- 4.44-1
+- Fixed icon install/uninstall portions
+- Updated the install-irfan.sh script to match the install-ffs from freefilesync package
+
 * Tue Dec  6 2016 B Stack <bgstack15@gmail.com>
 - 4.42-5
 - fixed rpm install scriptlet

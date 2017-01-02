@@ -35,10 +35,9 @@ The font is weird in the dialogs, but is still mostly usable. This bug is not pr
 You need to collect the sha256sum for each iview442.zip and irfanview_plugins_442.zip files and put them into the usr/share/irfan/inc/sha256sum.txt file.
 ####On the mirror server
 cd /mnt/mirror/bgscripts/irfanview
-shopt -s extglob
-sha256sum !(sha256sum.txt) > sha256sum.txt
+sha256sum iview*.zip irfanview_plugins*.zip > sha256sum.txt
 ####On the rpmbuild server
-curl http://mirror/bgscripts/irfanview/sha256sum.txt > ~/rpmbuild/irfan-4.42-3/usr/share/irfan/inc/sha256sum.txt
+curl http://mirror/bgscripts/irfanview/sha256sum.txt > ~/rpmbuild/SOURCES/irfan-4.44-1/usr/share/irfan/inc/sha256sum.txt
 
 ###Future use
 # Mimetype list, probably ~/.local/share/applications/mimeapps.list

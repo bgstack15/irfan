@@ -6,18 +6,20 @@
 # Purpose: Downloads and installs irfanview from official source
 # Package: irfan
 # History: 2016-12-06 modified to work properly during the rpm install phase, which is part of building the rpm and not actually deploying the rpm to a system.
+#    2017-01-02 referenced freefilesync.rpm file install-ffs.sh
 # Usage: Is used during the rpm build phase. It is also generally available.
 # Reference:
 # Improve:
 
 # Definitions
-infile=${RPM_BUILD_ROOT}/usr/share/irfan/inc/irfan_ver.txt
-outdir=${RPM_BUILD_ROOT}/usr/share/irfan/irfanview
-iver="" # dynamically defined by /usr/share/irfan/inc/irfan_ver.txt
-temp_iview=${RPM_BUILD_ROOT}/usr/share/irfan/source/iview.zip
-temp_plugins=${RPM_BUILD_ROOT}/usr/share/irfan/source/irfanview_plugins.zip
-ini_source=${RPM_BUILD_ROOT}/usr/share/irfan/inc/i_view32.ini
-ini_dest=${RPM_BUILD_ROOT}/usr/share/irfan/irfanview/i_view32.ini
+package="irfan"
+infile=${RPM_BUILD_ROOT}/usr/share/${package}/inc/${package}_ver.txt
+outdir=${RPM_BUILD_ROOT}/usr/share/${package}/irfanview
+pver="" # dynamically defined by /usr/share/${package}/inc/${package}_ver.txt
+temp_sw=${RPM_BUILD_ROOT}/usr/share/${package}/source/iview.zip
+temp_plugins=${RPM_BUILD_ROOT}/usr/share/${package}/source/irfanview_plugins.zip
+ini_source=${RPM_BUILD_ROOT}/usr/share/${package}/inc/i_view32.ini
+ini_dest=${RPM_BUILD_ROOT}/usr/share/${package}/irfanview/i_view32.ini
 sha256sumfile=${RPM_BUILD_ROOT}/usr/share/irfan/inc/sha256sum.txt
 
 # Functions
@@ -43,7 +45,7 @@ getsource() {
          case "${_attempts}" in
             #1) . ~/.bashrc 1>/dev/null 2>&1;; # was breaking weirdly on some interal definition
             2) test "$( ps -p $$ | xargs | awk '{print $NF}')" = "bash" && test -x /usr/bgscripts/bgscripts.bashrc && . /usr/bgscripts/bgscripts.bashrc --noglobalprofile 1>/dev/null 2>&1;;
-            3) unset http_proxy; unset https_proxy; _gssource=$( echo "${_gssource}" | sed -e 's/\(www\.\)\?irfanview\.info\/files/mirror\.example\.com\/bgscripts\/irfanview/;' 2>/dev/null );;
+            3) unset http_proxy; unset https_proxy; _gssource=$( echo "${_gssource}" | sed -e 's!'"${source1search}"'!'"${source1replace}"'!;' 2>/dev/null );;
             5) echo "File failed to download: ${_gssource}. Aborted." && exit 1;;
          esac
       else
@@ -51,6 +53,23 @@ getsource() {
       fi
       _attempts=$(( _attempts + 1 ))
    done
+}
+
+extract() {
+   # determine if tgz/tar.gz or other (use 7zip)
+   # call: extract "${outdir}" -y "${temp_sw}"
+   # available vars: ${command_7z}
+   _outdir="${1}"
+   _y="${2}" # should be a dash y
+   _temp_sw="${3}"
+   case "${_temp_sw##*.}" in
+      tar|gz|tgz) # use tar -zxf
+         tar -zx -C "${_outdir}" -f "${_temp_sw}"
+         ;;
+      *) # use command_7z
+         ${command_7z} x -o"${_outdir}" "${_y}" "${_temp_sw}"
+         ;;
+   esac
 }
 
 # Ensure target directories exists
@@ -62,7 +81,7 @@ fi
 # Get irfanview version to install.
 if ! test -f "${infile}";
 then
-   echo "Is irfan package installed? Check ${infile}. Aborted."
+   echo "Is ${package} package installed? Check ${infile}. Aborted."
    exit 1
 fi
 while read line;
@@ -71,12 +90,14 @@ do
    if test -n "${line}";
    then
       echo "Config file reports version number ${line}."
-      iver="${line}"
+      pver="${line}"
    fi
 done < "${infile}"
-tmp1=$( echo "${iver}" | tr -d '.' )
+tmp1=$( echo "${pver}" | tr -d '.' )
 sourcefile="http://irfanview.info/files/iview${tmp1}.zip"
 pluginssourcefile="http://irfanview.info/files/irfanview_plugins_${tmp1}.zip"
+source1search='\(www\.\)?irfanview\.info\/files'
+source1replace='mirror\.example\.com\/bgscripts\/irfanview'
 
 # Check dependencies
 if ! test -x "$( which curl 2>/dev/null)";
@@ -101,30 +122,30 @@ else
    command_7z="$( which 7z 2>/dev/null)";
 fi
 
-# Fetch irfanview source itself
-getsource "${sourcefile}" "${temp_iview}"
+# Fetch software source itself
+getsource "${sourcefile}" "${temp_sw}"
 
 # Fetch plugins source
 getsource "${pluginssourcefile}" "${temp_plugins}"
 
 # Extract irfanview
-echo "Extracting irfanview."
-${command_7z} x -o"${outdir}" -y "${temp_iview}" 1>/dev/null 2>&1 && rm -rf "${temp_iview}" 2>/dev/null || { echo "Unable to extract for some reason. Aborted."; exit 1; }
+echo "Extracting ${package}."
+extract "${outdir}" -y "${temp_sw}" 1>/dev/null 2>&1 && rm -rf "${temp_sw}" "${temp_sw%%.*z}.tar" 2>/dev/null || { echo "Unable to extract for some reason. Aborted."; exit 1; }
 
 # Extract plugins
 echo "Extracting plugins."
-${command_7z} x -o"${outdir}/Plugins" -y "${temp_plugins}" >/dev/null 2>&1 && rm -rf "${temp_plugins}" 2>/dev/null || { echo "Unable to extract plugins. You might experience limited functionality."; }
+extract "${outdir}/Plugins" -y "${temp_plugins}" 1>/dev/null 2>&1 && rm -rf "${temp_plugins}" "${temp_plugins%%.*z}.tar" 2>/dev/null || { echo "Unable to extract plugins. You might experience limited functionality."; }
 
 # Adjust permissions on the directories
 chmod -R 0755 "${outdir}/Plugins" "${outdir}/Languages" "${outdir}/Toolbars"
 
-# Initialize i_view32.ini
+# Initialize config file
 if test -f "${ini_source}";
 then
-   /bin/cp -p "${ini_source}" "${ini_dest}" 2>/dev/null && { echo "Initialized the i_view32.ini file."; }
+   /bin/cp -p "${ini_source}" "${ini_dest}" 2>/dev/null && { echo "Initialized the config file."; }
 fi
-chmod 0666 "${ini_dest}" 2>/dev/null
+chmod 0666 "${ini_source}" "${ini_dest}" 2>/dev/null
 
 # Provide final status notification
-echo "irfan ${iver} successfully installed."
+echo "${package} ${pver} successfully installed."
 exit 0

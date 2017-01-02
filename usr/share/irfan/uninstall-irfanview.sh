@@ -6,26 +6,28 @@
 # Purpose: Removes the irfanview that was downloaded and installed
 # Package: irfan
 # History:
+#    2017-01-02 updated
 # Usage: Generally available. Not needed by the rpm specifically.
 # Reference: install-irfanview.sh
 # Improve:
 
 # Definitions
-infile=/usr/share/irfan/inc/irfan_ver.txt
-outdir=/usr/share/irfan/irfanview
-iver="" # dynamically defined by /usr/share/irfan/inc/irfan_ver.txt
-temp_iview=/usr/share/irfan/source/iview.zip
-temp_plugins=/usr/share/irfan/source/irfanview_plugins.zip
-ini_source=/usr/share/irfan/inc/i_view32.ini
-ini_dest=/usr/share/irfan/irfanview/i_view32.ini
+package="irfan"
+infile=/usr/share/${package}/inc/irfan_ver.txt
+outdir=/usr/share/${package}/irfanview
+pver="" # dynamically defined by /usr/share/irfan/inc/irfan_ver.txt
+temp_sw=/usr/share/${package}/source/iview.zip
+temp_plugins=/usr/share/${package}/source/irfanview_plugins.zip
+ini_source=/usr/share/${package}/inc/i_view32.ini
+ini_dest=/usr/share/${package}/irfanview/i_view32.ini
 
-# Bup i_view32.ini if different from reference ini
-if ! cmp "${ini_dest}" "${ini_source}" 2>/dev/null;
+# Bup config if different from package-installed file
+if ! cmp "${ini_dest}" "${ini_source}" 1>/dev/null 2>&1;
 then
-   /bin/cp -p "${ini_source}" "${ini_dest}.$( date "+%Y-%m-%d" ).uninstalled" 2>/dev/null
+   /bin/cp -p "${ini_dest}" "${ini_source}.$( date "+%Y-%m-%d" ).uninstalled" 2>/dev/null
 fi
 
-# Remove irfanview directory
+# Remove software directory
 rm -rf "${outdir:-NOTHINGTODEL}" 2>/dev/null && mkdir "${outdir}" 2>/dev/null;
 
 # Provide final status notification

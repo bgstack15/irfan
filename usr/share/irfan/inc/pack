@@ -1,15 +1,27 @@
-File: /usr/share/irfan/docs/packaging.txt
-Package: irfan
-Author: bgstack15
-Startdate: 2016-06-20
-Title: Packing instructions for irfan
-Purpose: To make it easier to build the package
-Usage:
-Reference: README.txt
-Improve:
-Document: Below this line
+#!/bin/bash
+# needs bgscripts >= 1.1-26
+. /usr/bgscripts/bgscripts.bashrc --noclear --nodeps
 
-### PACKAGING for rhel/centos/fedora
+type="";
+
+case "${thisflavor}" in
+   redhat|rhel|centos|fedora|korora) type=rpm;;
+   debian|ubuntu) type=dpkg;;
+   *) type=targz;;
+esac
+
+echo " $@ " | grep -qiE -- "rpm|rhel|redhat|centos|fedora|korora" 1>/dev/null 2>&1 && type=rpm
+echo " $@ " | grep -qiE -- "debian|ubuntu|deb\s|dpkg" 1>/dev/null 2>&1 && type=dpkg
+echo " $@ " | grep -qiE -- "tar|tgz|gz" 1>/dev/null 2>&1 && type=targz
+
+
+echo "packaging ${type}"
+echo " $@ " | grep -qiE -- "debug|\B-d[ 0-9]{0,3}\s" 1>/dev/null 2>&1 && exit
+
+case "${type}" in
+   rpm)
+
+########## PACKAGING for rhel/centos/fedora
 rpmbuilddir=~/rpmbuild/
 package=irfan
 version=4.44-1
@@ -28,7 +40,10 @@ rm -rf "${package}.tgz"; tar -zc --exclude='.git' -f "${package}.tgz" "${package
 cd "${rpmbuilddir}/RPMS/noarch"
 rpmbuild -bb "${rpmbuilddir}/SPECS/${package}.spec"
 
-### PACKAGING for debian
+      ;;
+   dpkg)
+
+########## PACKAGING for debian
 # You need package dpkg-dev to build packages
 package=irfan
 version=4.44-1
@@ -45,9 +60,18 @@ dpkg-deb -b ~/deb/"${package}-${version}"
 rm -rf ~/deb/"${package}-${version}"
 mv ~/deb/"${package}-${version}.a" ~/deb/"${package}-${version}"
 
+      ;;
+   targz)
+
 ### PACKAGING in a master.tgz
-cd ~/deb || cd ~/rpmbuild/SOURCES
+cd ~/deb 2>/dev/null || cd ~/rpmbuild/SOURCES
 package=irfan
 version=4.44-1
 rm -rf ./"${package}-${version}".master.tgz
 tar -zcf ./"${package}-${version}".master.tgz "${package}-${version}"/
+
+      ;;
+   unknown)
+      echo "error: check $0 for errors on type ${type}." 1>&2
+      ;;
+esac
