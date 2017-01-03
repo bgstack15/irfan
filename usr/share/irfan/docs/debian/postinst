@@ -1,4 +1,5 @@
-# deb post 2017-01-02
+# deb post 2017-01-03
+# the dpkg needs the install script.
 /usr/share/irfan/install-irfanview.sh || exit 2
 # Deploy icons
 which xdg-icon-resource 1>/dev/null 2>&1 && {
@@ -11,12 +12,17 @@ which xdg-icon-resource 1>/dev/null 2>&1 && {
       case "${thistheme}" in
          Numix-Circle) thisshape=round;;
       esac
-      xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate /usr/share/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan &
+      xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate /usr/share/irfan/inc/icons/irfan-${thisshape}-${num}.png irfan &
       done
    done
 
    # Deploy scalable application icons
-   cp -p /usr/share/irfan/inc/icons/irfan-48-square.png /usr/share/icons/hicolor/48x48/apps/irfan.png
+   # custom: Numix-Circle uses svg for size 48
+   cp -p /usr/share/irfan/inc/icons/irfan-circle.svg /usr/share/icons/Numix-Circle/48/apps/irfan.svg &
+   # custom: Lubuntu uses svg for size 48
+   cp -p /usr/share/irfan/inc/icons/irfan-lubuntu.svg /usr/share/icons/Lubuntu/apps/48/irfan.svg &
+   # default
+   cp -p /usr/share/irfan/inc/icons/irfan-square-48.png /usr/share/icons/hicolor/48x48/apps/irfan.png
    cp -p /usr/share/irfan/inc/icons/irfan-square.svg /usr/share/icons/hicolor/scalable/apps/irfan.svg
 
    # Update icon caches

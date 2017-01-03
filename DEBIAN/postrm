@@ -1,4 +1,4 @@
-# deb postrm 2017-01-02
+# deb postrm 2017-01-03
 if test "$1" = "remove";
 then
 {
@@ -20,6 +20,10 @@ then
       done
 
       # remove scalable application icons
+      # custom: Numix-Circle uses svg for size 48
+      rm -f /usr/share/icons/Numix-Circle/48/apps/irfan.svg
+      # custom: Lubuntu uses svg for size 48
+      rm -f /usr/share/icons/Lubuntu/apps/48/irfan.svg
       # default
       rm -f /usr/share/icons/hicolor/48x48/apps/irfan.png
       rm -f /usr/share/icons/hicolor/scalable/apps/irfan.svg
