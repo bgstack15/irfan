@@ -52,15 +52,17 @@ which xdg-icon-resource 1>/dev/null 2>&1 && {
       case "${thistheme}" in
          Numix-Circle) thisshape=round;;
       esac
-      xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{_datarootdir}/%{name}/inc/icons/%{name}-${num}-${thisshape}.png irfan &
+      xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{_datarootdir}/%{name}/inc/icons/%{name}-${thisshape}-${num}.png irfan &
       done
    done
 
    # Deploy scalable application icons
-   # custom: Numix-Circle for Korora uses svg
-   cp -p %{_prefix}/%{name}/inc/icons/%{name}-circle.svg %{_datarootdir}/icons/Numix-Circle/48/apps/irfan.svg &
+   # custom: Numix-Circle uses svg for size 48
+   cp -p %{_datarootdir}/%{name}/inc/icons/%{name}-circle.svg %{_datarootdir}/icons/Numix-Circle/48/apps/irfan.svg &
+   # custom: Lubuntu uses svg for size 48
+   cp -p %{_datarootdir}/%{name}/inc/icons/%{name}-lubuntu.svg %{_datarootdir}/icons/Lubuntu/apps/48/irfan.svg &
    # default
-   cp -p %{_datarootdir}/%{name}/inc/icons/%{name}-48-square.png %{_datarootdir}/icons/hicolor/48x48/apps/irfan.png
+   cp -p %{_datarootdir}/%{name}/inc/icons/%{name}-square-48.png %{_datarootdir}/icons/hicolor/48x48/apps/irfan.png
    cp -p %{_datarootdir}/%{name}/inc/icons/%{name}-square.svg %{_datarootdir}/icons/hicolor/scalable/apps/irfan.svg
 
    # Update icon caches
@@ -92,7 +94,7 @@ do
    while read line;
    do
       which xdg-mime && {
-         #su "${thisuser}" -c "xdg-mime install %{_prefix}/%{name}/inc/nonedefined.xml &"
+         #su "${thisuser}" -c "xdg-mime install %{_datarootdir}/%{name}/inc/nonedefined.xml &"
          su "${thisuser}" -c "xdg-mime default irfanview.desktop ${line} &"
       }
       which gio && {
@@ -143,8 +145,10 @@ then
       done
 
       # Remove scalable application icons
-      # custom: Numix-Circle for Korora uses svg
+      # custom: Numix-Circle uses svg for size 48
       rm -f %{_datarootdir}/icons/Numix-Circle/48/apps/irfan.svg
+      # custom: Lubuntu uses svg for size 48
+      rm -f %{_datarootdir}/icons/Lubuntu/apps/48/irfan.svg
       # default
       rm -f %{_datarootdir}/icons/hicolor/48x48/apps/irfan.png
       rm -f %{_datarootdir}/icons/hicolor/scalable/apps/irfan.svg
@@ -178,24 +182,31 @@ exit 0
 /usr/share/irfan/inc/pack
 /usr/share/irfan/inc/irfanview64x64.png
 /usr/share/irfan/inc/icons
+/usr/share/irfan/inc/icons/irfan-clear-48.png
 /usr/share/irfan/inc/icons/irfan-clear.svg
-/usr/share/irfan/inc/icons/irfan-16-square.png
-/usr/share/irfan/inc/icons/irfan-16-round.png
-/usr/share/irfan/inc/icons/irfan-48-clear.png
-/usr/share/irfan/inc/icons/irfan-32-round.png
-/usr/share/irfan/inc/icons/irfan-64-clear.png
-/usr/share/irfan/inc/icons/irfan-16-clear.png
-/usr/share/irfan/inc/icons/irfan-24-round.png
-/usr/share/irfan/inc/icons/irfan-32-square.png
-/usr/share/irfan/inc/icons/irfan-24-clear.png
+/usr/share/irfan/inc/icons/irfan-circle-64.png
+/usr/share/irfan/inc/icons/irfan-square-16.png
+/usr/share/irfan/inc/icons/irfan-circle-48.png
+/usr/share/irfan/inc/icons/irfan-clear-64.png
+/usr/share/irfan/inc/icons/irfan-lubuntu-24.png
+%attr(755, -, -) /usr/share/irfan/inc/icons/generate-icons.sh
+/usr/share/irfan/inc/icons/irfan-square-48.png
+/usr/share/irfan/inc/icons/irfan-clear-24.png
+/usr/share/irfan/inc/icons/irfan-circle-16.png
+/usr/share/irfan/inc/icons/irfan-circle-32.png
+/usr/share/irfan/inc/icons/irfan-square-64.png
+/usr/share/irfan/inc/icons/irfan-lubuntu-16.png
+/usr/share/irfan/inc/icons/irfan-lubuntu-48.png
+/usr/share/irfan/inc/icons/irfan-square-32.png
+/usr/share/irfan/inc/icons/irfan-square-24.png
+/usr/share/irfan/inc/icons/irfan-lubuntu-64.png
 /usr/share/irfan/inc/icons/irfan-circle.svg
-/usr/share/irfan/inc/icons/irfan-24-square.png
-/usr/share/irfan/inc/icons/irfan-64-square.png
-/usr/share/irfan/inc/icons/irfan-48-round.png
-/usr/share/irfan/inc/icons/irfan-32-clear.png
+/usr/share/irfan/inc/icons/irfan-clear-16.png
+/usr/share/irfan/inc/icons/irfan-lubuntu.svg
+/usr/share/irfan/inc/icons/irfan-lubuntu-32.png
+/usr/share/irfan/inc/icons/irfan-circle-24.png
 /usr/share/irfan/inc/icons/irfan-square.svg
-/usr/share/irfan/inc/icons/irfan-48-square.png
-/usr/share/irfan/inc/icons/irfan-64-round.png
+/usr/share/irfan/inc/icons/irfan-clear-32.png
 %attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
 /usr/share/irfan/inc/irfanview32x32.png
 %attr(755, -, -) /usr/share/irfan/uninstall-irfanview.sh
@@ -215,10 +226,11 @@ exit 0
 %attr(755, -, -) /usr/share/irfan/install-irfanview.sh
 %attr(644, -, -) /usr/share/irfan/irfanview.desktop
 %changelog
-* Mon Jan  2 2017 B Stack <bgstack15@gmail.com>
+* Tue Jan  3 2017 B Stack <bgstack15@gmail.com>
 - 4.44-1
 - Fixed icon install/uninstall portions
 - Updated the install-irfan.sh script to match the install-ffs from freefilesync package
+- build generate-icons.sh for converting svg files to png
 
 * Tue Dec  6 2016 B Stack <bgstack15@gmail.com>
 - 4.42-5

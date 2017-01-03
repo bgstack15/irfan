@@ -1,28 +1,35 @@
+# deb post 2017-01-02
 /usr/share/irfan/install-irfanview.sh || exit 2
 # Deploy icons
 which xdg-icon-resource 1>/dev/null 2>&1 && {
    for num in 16 24 32 48 64;
    do
+      # Deploy application icons
       for thistheme in hicolor locolor Lubuntu;
       do
       thisshape=square
       case "${thistheme}" in
          Numix-Circle) thisshape=round;;
       esac
-      if test "${num}" = "48";
-      then
-         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate /usr/share/irfan/inc/icons/irfan-{thisshape}.svg irfan 1>/dev/null 2>&1
-      else
-         xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate /usr/share/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan 1>/dev/null 2>&1
-      fi
+      xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate /usr/share/irfan/inc/icons/irfan-${num}-${thisshape}.png irfan &
       done
    done
-   test -d /usr/share/icons/hicolor/scalable/ && \
-      for word in scalable 48x48; do cp -p /usr/share/irfan/inc/icons/irfan-square.svg /usr/share/icons/hicolor/${word}/apps/irfan.svg 1>/dev/null 2>&1; done
-   xdg-icon-resource forceupdate 1>/dev/null 2>&1
-}
 
-desktop-file-install --rebuild-mime-info-cache /usr/share/irfan/irfanview.desktop
+   # Deploy scalable application icons
+   cp -p /usr/share/irfan/inc/icons/irfan-48-square.png /usr/share/icons/hicolor/48x48/apps/irfan.png
+   cp -p /usr/share/irfan/inc/icons/irfan-square.svg /usr/share/icons/hicolor/scalable/apps/irfan.svg
+
+   # Update icon caches
+   xdg-icon-resource forceupdate &
+   for word in hicolor locolor Numix-Circle Numix Lubuntu elementary-xfce;
+   do
+      touch --no-create /usr/share/icons/${word}
+      gtk-update-icon-cache /usr/share/icons/${word} &
+   done
+} 1>/dev/null 2>&1
+
+# Deploy desktop file
+desktop-file-install --rebuild-mime-info-cache /usr/share/irfan/irfanview.desktop 1>/dev/null 2>&1
 
 # Remove wine viewer things
 for thisuser in ${SUDO_USER} bgstack15 bgstack15-local Bgstack15;
@@ -36,11 +43,23 @@ done
 # Set default application
 for thisuser in root ${SUDO_USER} Bgstack15 bgstack15 bgstack15-local;
 do
-   ! getent passwd "${thisuser}" 1>/dev/null 2>&1 && continue
+{
+   ! getent passwd "${thisuser}" && continue
    while read line;
    do
-      which gvfs-mime 1>/dev/null 2>&1 && su "${thisuser}" -c "gvfs-mime --set \"${line}\" irfanview.desktop 1>/dev/null 2>&1"
-      which xdg-mime 1>/dev/null 2>&1 && su "${thisuser}" -c "xdg-mime default irfanview.desktop \"${line}\" 1>/dev/null 2>&1"
+      which xdg-mime && {
+         #su "${thisuser}" -c "xdg-mime install /usr/share/irfan/inc/nonedefined.xml &"
+         su "${thisuser}" -c "xdg-mime default irfanview.desktop ${line} &"
+      }
+      which gio && {
+         su "${thisuser}" -c "gio mime  ${line} irfanview.desktop &"
+      }
+      #which update-mime-database && {
+      #   case "${thisuser}" in
+      #      root) update-mime-database /usr/share/mime & ;;
+      #      *) su "${thisuser}" -c "update-mime-database ~${thisuser}/.local/share/mime &";;
+      #   esac
+      #}
    done <<'EOW'
 image/jpeg
 image/gif
@@ -48,5 +67,6 @@ image/png
 image/tiff
 image/bmp
 EOW
+} 1>/dev/null 2>&1
 done
 exit 0

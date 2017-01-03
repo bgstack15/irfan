@@ -39,6 +39,7 @@ rm -rf "${package}.tgz"; tar -zc --exclude='.git' -f "${package}.tgz" "${package
 /bin/cp -pf "${rpmbuilddir}/SOURCES/${packagespecfile}" "${rpmbuilddir}/SPECS"
 cd "${rpmbuilddir}/RPMS/noarch"
 rpmbuild -bb "${rpmbuilddir}/SPECS/${package}.spec"
+rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/"
 
       ;;
    dpkg)
