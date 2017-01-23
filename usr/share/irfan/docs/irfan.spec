@@ -2,7 +2,7 @@ Name:		irfan
 Version:	4.44
 #Release:	3%{?dist}
 Release:	2
-Summary:	Irfanview 4.42, a graphics viewer
+Summary:	Irfanview 4.44, a graphics viewer
 
 Group:		Applications/Graphics
 License:	Installer is CC-BY-SA, application is freeware
@@ -29,18 +29,21 @@ Irfanview is an amazing graphics application for a different platform. Using win
 %install
 #%make_install
 rsync -a . %{buildroot}/
-if test -x %{buildroot}%{_datarootdir}/%{name}/install-irfanview.sh;
-then
-   %{buildroot}%{_datarootdir}/%{name}/install-irfanview.sh || exit 1
-else
-   :
-fi
 
 %clean
 rm -rf %{buildroot}
 
 %post
-# rpm post 2017-01-02
+# rpm post 2017-01-23
+
+# Install irfanview
+if test -x %{_datarootdir}/%{name}/install-irfanview.sh;
+then
+   %{_datarootdir}/%{name}/install-irfanview.sh || exit 1
+else
+   :
+fi
+
 # Deploy icons
 which xdg-icon-resource 1>/dev/null 2>&1 && {
    for num in 16 24 32 48 64;
@@ -118,8 +121,13 @@ done
 exit 0
 
 %preun
-# rpm preun 2017-01-02
+# rpm preun 2017-01-23
 # if I ever need preun Remove mimetype definitions, check freefilesync.rpm
+if test "$1" = "0";
+then
+   # total uninstall
+   %{_datarootdir}/%{name}/uninstall-irfanview.sh
+fi
 exit 0
 
 %postun
@@ -172,6 +180,7 @@ exit 0
 %attr(755, -, -) /usr/share/irfan/irfan.sh
 /usr/share/irfan/irfanview
 /usr/share/irfan/source
+%attr(755, -, -) /usr/share/irfan/uninstall-orig.sh
 /usr/share/irfan/inc
 /usr/share/irfan/inc/irfan_ver.txt
 /usr/share/irfan/inc/scrub.txt
@@ -210,6 +219,7 @@ exit 0
 %attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
 /usr/share/irfan/inc/irfanview32x32.png
 %attr(755, -, -) /usr/share/irfan/uninstall-irfanview.sh
+%attr(755, -, -) /usr/share/irfan/install-orig.sh
 /usr/share/irfan/docs
 %doc %attr(444, -, -) /usr/share/irfan/docs/README.txt
 /usr/share/irfan/docs/debian
@@ -226,6 +236,9 @@ exit 0
 %attr(755, -, -) /usr/share/irfan/install-irfanview.sh
 %attr(644, -, -) /usr/share/irfan/irfanview.desktop
 %changelog
+* Mon Jan 23 2017 B Stack <bgstack15@gmail.com> 4.44-2
+- rewrote installation to use a customized winetricks installation
+
 * Tue Jan  3 2017 B Stack <bgstack15@gmail.com>
 - 4.44-1
 - Fixed icon install/uninstall portions
