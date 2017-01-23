@@ -69,7 +69,7 @@ rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/"
 # if you copy-paste this, be sure to define package, version
 debdir=~/deb
 packagedebfilesdir="${package}-${version}/usr/share/${package}/docs/debian"
-cd "${debdir}/SOURCES/${package}-${version}/usr/bin"; ln -sf ../share/${package}/irfan.sh irfan
+cd "${debdir}/${package}-${version}/usr/bin"; ln -sf ../share/${package}/irfan.sh irfan
 cd "${debdir}/${package}-${version}"
 find . -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' ! -regex '.*?.swp' ! -regex '.*\.git.*' -printf '%P ' | xargs md5sum > "${debdir}/${packagedebfilesdir}/md5sums"
 rm -rf "${debdir}/${package}-${version}/DEBIAN/" 2>/dev/null; mkdir -p "${debdir}/${package}-${version}/DEBIAN/"
