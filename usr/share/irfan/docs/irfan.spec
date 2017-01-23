@@ -1,7 +1,7 @@
 Name:		irfan
 Version:	4.44
 #Release:	3%{?dist}
-Release:	1
+Release:	2
 Summary:	Irfanview 4.42, a graphics viewer
 
 Group:		Applications/Graphics

@@ -1,6 +1,6 @@
 #!/bin/bash
-# needs bgscripts >= 1.1-26
-. /usr/bgscripts/bgscripts.bashrc --noclear --nodeps
+# needs bgscripts >= 1.1-28
+. /usr/share/bgscripts/framework.sh
 
 type="";
 
@@ -10,22 +10,41 @@ case "${thisflavor}" in
    *) type=targz;;
 esac
 
+echo " $@ " | grep -qiE -- "help|usage|\s-h\s|\s-\?" 1>/dev/null 2>&1 && {
+   # display help and exit
+   less -F <<EOF
+pack utility version 2017-01-23a-irfan
+usage: pack [ rpm | deb | tar | scrub ] [ --debug | -d {0-10} ]
+Provides a single command for building a package. This script is customized to each package.
+optional arguments:
+ [ rpm | deb | tar | scrub ]    Build that type of package. Scrub calls the scrub.py script.
+                                The default depends on the local os flavor. This system is "${thisflavor}"
+ [ --debug {0-10} | -d {0-10} ] Display package type to build and exit. Debuglev not implemented here.
+EOF
+exit 1
+}
+
+# Derive package name and version number, for my simple package versions only.
+fullname="$( pwd | sed -e 's/.*\(SOURCES\|deb\)\///;s/\/.*//;' )"
+version="$( echo "${fullname}" | grep -oiE -- "-[0-9]{0,3}\.[0-9a-zA-Z]{0,5}-[0-9]{0,4}" | sed -e 's/^-//;' )"
+shortversion="$( echo "${version}" | sed -e 's/-.*//;' )"
+package="$( echo "${fullname}" | sed -e "s/-${version}//;" )"
+
 echo " $@ " | grep -qiE -- "rpm|rhel|redhat|centos|fedora|korora" 1>/dev/null 2>&1 && type=rpm
 echo " $@ " | grep -qiE -- "debian|ubuntu|deb\s|dpkg" 1>/dev/null 2>&1 && type=dpkg
 echo " $@ " | grep -qiE -- "tar|tgz|gz" 1>/dev/null 2>&1 && type=targz
+echo " $@ " | grep -qiE -- "scrub" 1>/dev/null 2>&1 && type=scrub
 
-
-echo "packaging ${type}"
-echo " $@ " | grep -qiE -- "debug|\B-d[ 0-9]{0,3}\s" 1>/dev/null 2>&1 && exit
+# Display information
+echo "packaging ${package}-${version} as ${type}"
+echo " $@ " | grep -qiE -- "debug|\B-d[ 0-9]{0,3}\s" 1>/dev/null 2>&1 && exit 0
 
 case "${type}" in
    rpm)
 
 ########## PACKAGING for rhel/centos/fedora
+# if you copy-paste this, be sure to define package, version, shortversion
 rpmbuilddir=~/rpmbuild/
-package=irfan
-version=4.44-1
-shortversion=4.44
 packagespecfile="${package}-${version}/usr/share/${package}/docs/${package}.spec"
 sed -n -e '1,/^\%files$/p;' "${rpmbuilddir}/SOURCES/${packagespecfile}" > "${rpmbuilddir}/SOURCES/${packagespecfile}.swp" #removes files and changelog
 cd ${rpmbuilddir}/SOURCES/"${package}-${version}"
@@ -46,8 +65,7 @@ rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/"
 
 ########## PACKAGING for debian
 # You need package dpkg-dev to build packages
-package=irfan
-version=4.44-1
+# if you copy-paste this, be sure to define package, version
 packagedebfilesdir="${package}-${version}/usr/share/${package}/docs/debian"
 cd ~/deb/"${package}-${version}"
 find . -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' ! -regex '.*?.swp' ! -regex '.*\.git.*' -printf '%P ' | xargs md5sum > ~/deb/"${packagedebfilesdir}"/md5sums
@@ -65,11 +83,21 @@ mv ~/deb/"${package}-${version}.a" ~/deb/"${package}-${version}"
    targz)
 
 ### PACKAGING in a master.tgz
+# if you copy-paste this, be sure to define package, version
 cd ~/deb 2>/dev/null || cd ~/rpmbuild/SOURCES
 package=irfan
 version=4.44-1
 rm -rf ./"${package}-${version}".master.tgz
 tar -zcf ./"${package}-${version}".master.tgz "${package}-${version}"/
+
+      ;;
+   scrub)
+
+########## SCRUB for publication
+# if you copy-paste this, be sure to define package, version
+cd ~/deb 2>/dev/null || cd ~/rpmbuild/SOURCES
+cd "$( find . -name "*scrub.txt" | grep -iE "${package}-${version}\/" | xargs dirname )"
+/usr/share/bgscripts/scrub.py
 
       ;;
    unknown)
