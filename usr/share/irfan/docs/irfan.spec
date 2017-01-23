@@ -1,7 +1,7 @@
 Name:		irfan
 Version:	4.44
 #Release:	3%{?dist}
-Release:	1
+Release:	3
 Summary:	Irfanview 4.42, a graphics viewer
 
 Group:		Applications/Graphics
@@ -166,13 +166,13 @@ fi
 exit 0
 
 %files
-/usr
-/usr/share
-/usr/share/irfan
+%dir /usr/share/irfan
+%dir /usr/share/irfan/source
+%dir /usr/share/irfan/inc
+%dir /usr/share/irfan/inc/icons
+%dir /usr/share/irfan/docs
+%dir /usr/share/irfan/docs/debian
 %attr(755, -, -) /usr/share/irfan/irfan.sh
-/usr/share/irfan/irfanview
-/usr/share/irfan/source
-/usr/share/irfan/inc
 /usr/share/irfan/inc/irfan_ver.txt
 /usr/share/irfan/inc/scrub.txt
 %config %attr(666, -, -) /usr/share/irfan/inc/i_view32.ini
@@ -181,7 +181,6 @@ exit 0
 %attr(755, -, -) /usr/share/irfan/inc/irfan-vlc.sh
 /usr/share/irfan/inc/pack
 /usr/share/irfan/inc/irfanview64x64.png
-/usr/share/irfan/inc/icons
 /usr/share/irfan/inc/icons/irfan-clear-48.png
 /usr/share/irfan/inc/icons/irfan-clear.svg
 /usr/share/irfan/inc/icons/irfan-circle-64.png
@@ -210,9 +209,7 @@ exit 0
 %attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
 /usr/share/irfan/inc/irfanview32x32.png
 %attr(755, -, -) /usr/share/irfan/uninstall-irfanview.sh
-/usr/share/irfan/docs
 %doc %attr(444, -, -) /usr/share/irfan/docs/README.txt
-/usr/share/irfan/docs/debian
 /usr/share/irfan/docs/debian/postinst
 /usr/share/irfan/docs/debian/prerm
 /usr/share/irfan/docs/debian/control
@@ -225,7 +222,15 @@ exit 0
 /usr/share/irfan/docs/files-for-versioning.txt
 %attr(755, -, -) /usr/share/irfan/install-irfanview.sh
 %attr(644, -, -) /usr/share/irfan/irfanview.desktop
+/usr/bin/irfan
+/usr/share/irfan/irfanview
 %changelog
+* Mon Jan 23 2017 B Stack <bgstack15@gmail.com> 4.44-3
+- Updating normal installer to match the fixes made for 4.44-2 which was not published.
+
+* Mon Jan 23 2017 B Stack <bgstack15@gmail.com> 4.44-2
+- rewrote installation to use a customized winetricks installation
+
 * Tue Jan  3 2017 B Stack <bgstack15@gmail.com>
 - 4.44-1
 - Fixed icon install/uninstall portions

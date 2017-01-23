@@ -7,6 +7,7 @@
 # Package: irfan
 # History: 2016-12-06 modified to work properly during the rpm install phase, which is part of building the rpm and not actually deploying the rpm to a system.
 #    2017-01-02 referenced freefilesync.rpm file install-ffs.sh
+#    2017-01-23 made more generic
 # Usage: Is used during the rpm build phase. It is also generally available.
 # Reference:
 # Improve:
@@ -78,7 +79,7 @@ then
    mkdir -p "${outdir}/../source" || { echo "Unable to make directory ${outdir}. Aborted."; exit 1; }
 fi
 
-# Get irfanview version to install.
+# Get software version to install.
 if ! test -f "${infile}";
 then
    echo "Is ${package} package installed? Check ${infile}. Aborted."
@@ -128,7 +129,7 @@ getsource "${sourcefile}" "${temp_sw}"
 # Fetch plugins source
 getsource "${pluginssourcefile}" "${temp_plugins}"
 
-# Extract irfanview
+# Extract software
 echo "Extracting ${package}."
 extract "${outdir}" -y "${temp_sw}" 1>/dev/null 2>&1 && rm -rf "${temp_sw}" "${temp_sw%%.*z}.tar" 2>/dev/null || { echo "Unable to extract for some reason. Aborted."; exit 1; }
 
