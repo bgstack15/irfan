@@ -226,7 +226,7 @@ exit 0
 /usr/share/irfan/docs/debian/postinst
 /usr/share/irfan/docs/debian/prerm
 /usr/share/irfan/docs/debian/control
-/usr/share/irfan/docs/debian/conffiles
+/usr/share/irfan/docs/debian/foo1
 /usr/share/irfan/docs/debian/postrm
 /usr/share/irfan/docs/debian/md5sums
 /usr/share/irfan/docs/debian/preinst

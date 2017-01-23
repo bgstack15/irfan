@@ -66,18 +66,16 @@ rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/"
 ########## PACKAGING for debian
 # You need package dpkg-dev to build packages
 # if you copy-paste this, be sure to define package, version
+debdir=~/deb
 packagedebfilesdir="${package}-${version}/usr/share/${package}/docs/debian"
-cd ~/deb/"${package}-${version}"
-find . -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' ! -regex '.*?.swp' ! -regex '.*\.git.*' -printf '%P ' | xargs md5sum > ~/deb/"${packagedebfilesdir}"/md5sums
-rm -rf ~/deb/"${package}-${version}"/DEBIAN/ 2>/dev/null; mkdir -p ~/deb/"${package}-${version}"/DEBIAN/
-cp -pf ~/deb/"${packagedebfilesdir}"/* ~/deb/"${package}-${version}"/DEBIAN/
+cd "${debdir}/${package}-${version}"
+find . -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' ! -regex '.*?.swp' ! -regex '.*\.git.*' ! -regex '.*\.ini' -printf '%P ' | xargs md5sum > "${debdir}/${packagedebfilesdir}/md5sums"
+rm -rf "${debdir}/${package}-${version}/DEBIAN/" 2>/dev/null; mkdir -p "${debdir}/${package}-${version}/DEBIAN/"
+cp -pf "${debdir}/${packagedebfilesdir}"/* "${debdir}/${package}-${version}/DEBIAN/"
 cd ~/deb
-rm -rf ~/deb/"${package}-${version}.a"
-cp -pR ~/deb/"${package}-${version}" ~/deb/"${package}-${version}.a"
-rm -rf ~/deb/"${package}-${version}"/.git
-dpkg-deb -b ~/deb/"${package}-${version}"
-rm -rf ~/deb/"${package}-${version}"
-mv ~/deb/"${package}-${version}.a" ~/deb/"${package}-${version}"
+mv "${debdir}/${package}-${version}/.git" "${debdir}/.git$$"
+fakeroot dpkg-deb -b ~/deb/"${package}-${version}"
+mv "${debdir}/.git$$" "${debdir}/${package}-${version}/.git"
 
       ;;
    targz)
@@ -85,8 +83,6 @@ mv ~/deb/"${package}-${version}.a" ~/deb/"${package}-${version}"
 ### PACKAGING in a master.tgz
 # if you copy-paste this, be sure to define package, version
 cd ~/deb 2>/dev/null || cd ~/rpmbuild/SOURCES
-package=irfan
-version=4.44-1
 rm -rf ./"${package}-${version}".master.tgz
 tar -zcf ./"${package}-${version}".master.tgz "${package}-${version}"/
 
