@@ -194,7 +194,6 @@ exit 0
 %dir /usr/share/irfan/inc/icons
 %dir /usr/share/irfan/docs
 %dir /usr/share/irfan/docs/debian
-/README.md
 %attr(755, -, -) /usr/share/irfan/irfan.sh
 /usr/share/irfan/inc/irfan_ver.txt
 /usr/share/irfan/inc/scrub.txt

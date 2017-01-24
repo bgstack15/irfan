@@ -13,7 +13,7 @@ esac
 echo " $@ " | grep -qiE -- "help|usage|\s-h\s|\s-\?" 1>/dev/null 2>&1 && {
    # display help and exit
    less -F <<EOF
-pack utility version 2017-01-24a-irfan
+pack utility version 2017-01-24b-irfan
 usage: pack [ rpm | deb | tar | scrub ] [ --debug | -d {0-10} ]
 Provides a single command for building a package. This script is customized to each package.
 optional arguments:
@@ -49,17 +49,17 @@ packagespecfile="${package}-${version}/usr/share/${package}/docs/${package}.spec
 sed -n -e '1,/^\%files$/p;' "${rpmbuilddir}/SOURCES/${packagespecfile}" > "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp" #removes files and changelog
 cd "${rpmbuilddir}/SOURCES/${package}-${version}/usr/bin"; ln -sf ../share/${package}/irfan.sh irfan
 cd "${rpmbuilddir}/SOURCES/${package}-${version}"
-{ find * -type d -regex 'usr\/share\/irfan.*' ! -regex '.*irfan\/irfanview.*' | sed -e 's/^/%dir \//;' ; find * ! -regex '.*?.swp' ! -type d ! -regex '.*?DEBIAN.*?' | sed -e 's/^/\//;' -e 's/\(\(.*packaging\|.*README\)\.txt\)/%doc %attr(444, -, -) \1/;' -e 's/\(.*\.ini\)/%config %attr(666, -, -) \1/;' -e 's/\(.*\.sh\)/%attr(755, -, -) \1/;' -e 's/\(.*\.desktop\)/%attr(644, -, -) \1/;' ; echo "/usr/share/irfan/irfanview" ; } >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp"
+{ find * -type d -regex 'usr\/share\/irfan.*' ! -regex '.*irfan\/irfanview.*' | sed -e 's/^/%dir \//;' ; find * -mindepth 1 ! -regex '.*?.swp' ! -type d ! -regex '.*?DEBIAN.*?' | sed -e 's/^/\//;' -e 's/\(\(.*packaging\|.*README\)\.txt\)/%doc %attr(444, -, -) \1/;' -e 's/\(.*\.ini\)/%config %attr(666, -, -) \1/;' -e 's/\(.*\.sh\)/%attr(755, -, -) \1/;' -e 's/\(.*\.desktop\)/%attr(644, -, -) \1/;' ; echo "/usr/share/irfan/irfanview" ; } >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp"
 { printf '\n'; sed -n -e '/^\%changelog/,$p' "${rpmbuilddir}/SOURCES/${packagespecfile}" ; } >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp"
 mv -f "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp" "${rpmbuilddir}/SOURCES/${packagespecfile}"
 rm -rf ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"; cp -prf ${rpmbuilddir}/SOURCES/"${package}-${version}" ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"
 rm -rf ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"/DEBIAN
 cd "${rpmbuilddir}/SOURCES"
-rm -rf "${package}.tgz"; tar -zc --exclude='.git' -f "${package}.tgz" "${package}-${shortversion}"
+rm -rf "${package}.tgz"; tar -zc --exclude='.git' --exclude 'README.md' -f "${package}.tgz" "${package}-${shortversion}"
 /bin/cp -pf "${rpmbuilddir}/SOURCES/${packagespecfile}" "${rpmbuilddir}/SPECS"
 cd "${rpmbuilddir}/RPMS/noarch"
 rpmbuild -bb "${rpmbuilddir}/SPECS/${package}.spec"
-rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/"
+rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/" "${rpmbuilddir}/SOURCES/${package}.tgz"
 
       ;;
    dpkg)
@@ -71,7 +71,7 @@ debdir=~/deb
 packagedebfilesdir="${package}-${version}/usr/share/${package}/docs/debian"
 cd "${debdir}/${package}-${version}/usr/bin"; ln -sf ../share/${package}/irfan.sh irfan
 cd "${debdir}/${package}-${version}"
-find . -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' ! -regex '.*?.swp' ! -regex '.*\.git.*' -printf '%P ' | xargs md5sum > "${debdir}/${packagedebfilesdir}/md5sums"
+find . -mindepth 1 -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' ! -regex '.*?.swp' ! -regex '.*\.git.*' -printf '%P ' | xargs md5sum > "${debdir}/${packagedebfilesdir}/md5sums"
 rm -rf "${debdir}/${package}-${version}/DEBIAN/" 2>/dev/null; mkdir -p "${debdir}/${package}-${version}/DEBIAN/"
 cp -pf "${debdir}/${packagedebfilesdir}"/* "${debdir}/${package}-${version}/DEBIAN/"
 cd ~/deb

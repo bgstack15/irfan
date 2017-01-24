@@ -32,7 +32,7 @@ ea279fe4fc49ea37b9c39cf66e260c26  usr/share/irfan/inc/winetricks
 cc925fcc7b07a0504e79acf71fe38150  usr/share/irfan/inc/irfanview64x64.png
 d67ec8985c1d61a555b626450730ac3f  usr/share/irfan/inc/irfanview32x32.png
 3a745f43726b76f609dce5fc18b0496d  usr/share/irfan/inc/sha256sum.txt
-1e7b6e7491c45ede3abef80bd5a77dfc  usr/share/irfan/inc/pack
+506a82b92b290680c7154c06284b48e7  usr/share/irfan/inc/pack
 c3889ec36d7476ecf45e371876d2516d  usr/share/irfan/inc/localize_git.sh
 f041a11074642c1ad9ed1fc46a8223bb  usr/share/irfan/uninstall-irfanview.sh
 067196d5930d96c7fe77a15a64faf4e0  usr/share/irfan/install-irfanview.sh
@@ -43,9 +43,9 @@ af10d9463a6ab9eee6527ad91f2144c4  usr/share/irfan/docs/debian/control
 a286a694ff9192f33dcc012522ff2861  usr/share/irfan/docs/debian/postrm
 7dac55e01fa6e948199e78ad3ac8c7ba  usr/share/irfan/docs/debian/prerm
 d41d8cd98f00b204e9800998ecf8427e  usr/share/irfan/docs/debian/preinst
-68cbacace337628f0c61f182eb3a945f  usr/share/irfan/docs/debian/md5sums
+7804832d18edc6b704b2c2f18bdea9fd  usr/share/irfan/docs/debian/md5sums
 0d6657ab0b45b2c04ac8d74c3382a817  usr/share/irfan/docs/debian/conffiles
 2b5eb06802c39c9c912b073e8d921f6c  usr/share/irfan/docs/README.txt
-a9b09124afd0f4c5dbe2b302be95d304  usr/share/irfan/docs/irfan.spec
+748a6d898b86062c4c1baa516da3810b  usr/share/irfan/docs/irfan.spec
 9f4625b6a37effa8edbbf4f721164261  usr/share/irfan/irfanview.desktop
 113308cde01e462efaaf162177c876c5  README.md
