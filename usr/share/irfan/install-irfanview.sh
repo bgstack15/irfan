@@ -7,7 +7,7 @@
 # Package: irfan
 # History: 2016-12-06 modified to work properly during the rpm install phase, which is part of building the rpm and not actually deploying the rpm to a system.
 #    2017-01-02 referenced freefilesync.rpm file install-ffs.sh
-#    2017-01-23 made more generic
+#    2017-01-23 made more generic and updated for bgscripts's new location
 # Usage: Is used during the rpm build phase. It is also generally available.
 # Reference:
 # Improve:
@@ -45,7 +45,7 @@ getsource() {
       then
          case "${_attempts}" in
             #1) . ~/.bashrc 1>/dev/null 2>&1;; # was breaking weirdly on some interal definition
-            2) test "$( ps -p $$ | xargs | awk '{print $NF}')" = "bash" && test -x /usr/bgscripts/bgscripts.bashrc && . /usr/bgscripts/bgscripts.bashrc --noglobalprofile 1>/dev/null 2>&1;;
+            2) test "$( ps -p $$ | xargs | awk '{print $NF}')" = "bash" && test -x /usr/share/bgscripts/bgscripts.bashrc && . /usr/share/bgscripts/bgscripts.bashrc --noglobalprofile 1>/dev/null 2>&1;;
             3) unset http_proxy; unset https_proxy; _gssource=$( echo "${_gssource}" | sed -e 's!'"${source1search}"'!'"${source1replace}"'!;' 2>/dev/null );;
             5) echo "File failed to download: ${_gssource}. Aborted." && exit 1;;
          esac

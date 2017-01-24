@@ -1,4 +1,4 @@
-# deb post 2017-01-03
+# deb post 2017-01-24
 # the dpkg needs the install script.
 /usr/share/irfan/install-irfanview.sh || exit 2
 # Deploy icons
@@ -42,7 +42,7 @@ for thisuser in ${SUDO_USER} bgstack15 bgstack15-local Bgstack15;
 do
    for word in "application/pdf=wine-extension-pdf.desktop;" "image/gif=wine-extension-gif.desktop;" "image/jpeg=wine-extension-jpe.desktop;wine-extension-jfif.desktop;" "image/png=wine-extension-png.desktop;";
    do
-      /usr/bgscripts/updateval.py --apply /home/"${thisuser}"/.local/share/applications/mimeinfo.cache "${word}" "" 1>/dev/null 2>&1
+      /usr/share/bgscripts/updateval.py --apply /home/"${thisuser}"/.local/share/applications/mimeinfo.cache "${word}" "" 1>/dev/null 2>&1
    done
 done
 

@@ -46,12 +46,12 @@ case "${type}" in
 # if you copy-paste this, be sure to define package, version, shortversion
 rpmbuilddir=~/rpmbuild/
 packagespecfile="${package}-${version}/usr/share/${package}/docs/${package}.spec"
-sed -n -e '1,/^\%files$/p;' "${rpmbuilddir}/SOURCES/${packagespecfile}" > "${rpmbuilddir}/SOURCES/${packagespecfile}.swp" #removes files and changelog
+sed -n -e '1,/^\%files$/p;' "${rpmbuilddir}/SOURCES/${packagespecfile}" > "${rpmbuilddir}/SOURCES/${packagespecfile}.$$" #removes files and changelog
 cd "${rpmbuilddir}/SOURCES/${package}-${version}/usr/bin"; ln -sf ../share/${package}/irfan.sh irfan
 cd "${rpmbuilddir}/SOURCES/${package}-${version}"
-{ find * -type d -regex 'usr\/share\/irfan.*' ! -regex '.*irfan\/irfanview.*' | sed -e 's/^/%dir \//;' ; find * ! -regex '.*?.swp' ! -type d ! -regex '.*?DEBIAN.*?' | sed -e 's/^/\//;' -e 's/\(\(.*packaging\|.*README\)\.txt\)/%doc %attr(444, -, -) \1/;' -e 's/\(.*\.ini\)/%config %attr(666, -, -) \1/;' -e 's/\(.*\.sh\)/%attr(755, -, -) \1/;' -e 's/\(.*\.desktop\)/%attr(644, -, -) \1/;' ; echo "/usr/share/irfan/irfanview" ; } >> "${rpmbuilddir}/SOURCES/${packagespecfile}.swp"
-sed -n -e '/^\%changelog/,$p' "${rpmbuilddir}/SOURCES/${packagespecfile}" >> "${rpmbuilddir}/SOURCES/${packagespecfile}.swp"
-mv -f "${rpmbuilddir}/SOURCES/${packagespecfile}.swp" "${rpmbuilddir}/SOURCES/${packagespecfile}"
+{ find * -type d -regex 'usr\/share\/irfan.*' ! -regex '.*irfan\/irfanview.*' | sed -e 's/^/%dir \//;' ; find * ! -regex '.*?.swp' ! -type d ! -regex '.*?DEBIAN.*?' | sed -e 's/^/\//;' -e 's/\(\(.*packaging\|.*README\)\.txt\)/%doc %attr(444, -, -) \1/;' -e 's/\(.*\.ini\)/%config %attr(666, -, -) \1/;' -e 's/\(.*\.sh\)/%attr(755, -, -) \1/;' -e 's/\(.*\.desktop\)/%attr(644, -, -) \1/;' ; echo "/usr/share/irfan/irfanview" ; } >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$"
+{ printf '\n'; sed -n -e '/^\%changelog/,$p' "${rpmbuilddir}/SOURCES/${packagespecfile}" ; } >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$"
+mv -f "${rpmbuilddir}/SOURCES/${packagespecfile}.$$" "${rpmbuilddir}/SOURCES/${packagespecfile}"
 rm -rf ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"; cp -prf ${rpmbuilddir}/SOURCES/"${package}-${version}" ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"
 rm -rf ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"/DEBIAN
 cd "${rpmbuilddir}/SOURCES"

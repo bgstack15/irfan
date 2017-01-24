@@ -40,7 +40,7 @@ fi
 rm -rf %{buildroot}
 
 %post
-# rpm post 2017-01-02
+# rpm post 2017-01-24
 # Deploy icons
 which xdg-icon-resource 1>/dev/null 2>&1 && {
    for num in 16 24 32 48 64;
@@ -82,7 +82,7 @@ for thisuser in bgstack15 bgstack15-local Bgstack15;
 do
    for word in "application/pdf=wine-extension-pdf.desktop;" "image/gif=wine-extension-gif.desktop;" "image/jpeg=wine-extension-jpe.desktop;wine-extension-jfif.desktop;" "image/png=wine-extension-png.desktop;";
    do
-      /usr/bgscripts/updateval.py --apply /home/"${thisuser}"/.local/share/applications/mimeinfo.cache "${word}" "" 1>/dev/null 2>&1
+      /usr/share/bgscripts/updateval.py --apply /home/"${thisuser}"/.local/share/applications/mimeinfo.cache "${word}" "" 1>/dev/null 2>&1
    done
 done
 
@@ -225,8 +225,9 @@ exit 0
 /usr/bin/irfan
 /usr/share/irfan/irfanview
 %changelog
-* Mon Jan 23 2017 B Stack <bgstack15@gmail.com> 4.44-3
+* Tues Jan 24 2017 B Stack <bgstack15@gmail.com> 4.44-3
 - Updating normal installer to match the fixes made for 4.44-2 which was not published.
+- Added readme to root dir for github visitors
 
 * Mon Jan 23 2017 B Stack <bgstack15@gmail.com> 4.44-2
 - rewrote installation to use a customized winetricks installation
