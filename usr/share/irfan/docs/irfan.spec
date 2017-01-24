@@ -28,7 +28,16 @@ Irfanview is an amazing graphics application for a different platform. Using win
 
 %install
 #%make_install
-rsync -a . %{buildroot}/
+rm -rf %{buildroot}
+rsync -a . %{buildroot}/ --exclude='**/.*.swp'
+
+# Make symlinks
+for word in irfan;
+do
+   ln -sf ../share/%{name}/${word}.sh %{buildroot}%{_bindir}/${word}
+done
+
+# Run install script
 if test -x %{buildroot}%{_datarootdir}/%{name}/install-irfanview.sh;
 then
    %{buildroot}%{_datarootdir}/%{name}/install-irfanview.sh || exit 1
@@ -43,21 +52,25 @@ rm -rf %{buildroot}
 # rpm post 2017-01-24
 # Deploy icons
 which xdg-icon-resource 1>/dev/null 2>&1 && {
-   for num in 16 24 32 48 64;
+
+   # Deploy default application icons
+   for theme in hicolor locolor Numix-Circle;
    do
-      # Deploy application icons
-      for thistheme in hicolor locolor Numix-Circle;
+      shape=square
+      case "${theme}" in Numix-Circle) shape=circle;; Lubuntu) shape=Lubuntu;; esac
+
+      # Deploy scalable application icons
+      cp -p %{_datarootdir}/%{name}/inc/icons/apps/irfan-${shape}.svg %{_datarootdir}/icons/${theme}/scalable/apps/irfan.svg
+
+      # Deploy size application icons
+      for size in 16 24 32 48 64;
       do
-      thisshape=square
-      case "${thistheme}" in
-         Numix-Circle) thisshape=round;;
-      esac
-      xdg-icon-resource install --context apps --size "${num}" --theme "${thistheme}" --novendor --noupdate %{_datarootdir}/%{name}/inc/icons/%{name}-${thisshape}-${num}.png irfan &
+         xdg-icon-resource install --context apps --size "${size}" --theme "${theme}" --novendor --noupdate %{_datarootdir}/%{name}/inc/icons/apps/irfan-${shape}-${size}.png irfan &
       done
    done
 
-   # Deploy scalable application icons
-   # custom: Numix-Circle uses svg for size 48
+   # Deploy custom application icons
+   # custom: Numix-Circle apps 48 uses svg
    cp -p %{_datarootdir}/%{name}/inc/icons/%{name}-circle.svg %{_datarootdir}/icons/Numix-Circle/48/apps/irfan.svg &
    # custom: Lubuntu uses svg for size 48
    cp -p %{_datarootdir}/%{name}/inc/icons/%{name}-lubuntu.svg %{_datarootdir}/icons/Lubuntu/apps/48/irfan.svg &
@@ -72,38 +85,39 @@ which xdg-icon-resource 1>/dev/null 2>&1 && {
       touch --no-create %{_datarootdir}/icons/${word}
       gtk-update-icon-cache %{_datarootdir}/icons/${word} &
    done
+
 } 1>/dev/null 2>&1
 
 # Deploy desktop file
 desktop-file-install --rebuild-mime-info-cache %{_datarootdir}/%{name}/irfanview.desktop 1>/dev/null 2>&1
 
 # Remove wine viewer things
-for thisuser in bgstack15 bgstack15-local Bgstack15;
+for user in bgstack15 bgstack15-local Bgstack15;
 do
    for word in "application/pdf=wine-extension-pdf.desktop;" "image/gif=wine-extension-gif.desktop;" "image/jpeg=wine-extension-jpe.desktop;wine-extension-jfif.desktop;" "image/png=wine-extension-png.desktop;";
    do
-      /usr/share/bgscripts/updateval.py --apply /home/"${thisuser}"/.local/share/applications/mimeinfo.cache "${word}" "" 1>/dev/null 2>&1
+      /usr/share/bgscripts/updateval.py --apply /home/"${user}"/.local/share/applications/mimeinfo.cache "${word}" "" 1>/dev/null 2>&1
    done
 done
 
 # Set default application
-for thisuser in root ${SUDO_USER} Bgstack15 bgstack15 bgstack15-local;
+for user in root ${SUDO_USER} Bgstack15 bgstack15 bgstack15-local;
 do
 {
-   ! getent passwd "${thisuser}" && continue
+   ! getent passwd "${user}" && continue
    while read line;
    do
       which xdg-mime && {
-         #su "${thisuser}" -c "xdg-mime install %{_datarootdir}/%{name}/inc/nonedefined.xml &"
-         su "${thisuser}" -c "xdg-mime default irfanview.desktop ${line} &"
+         #su "${user}" -c "xdg-mime install %{_datarootdir}/%{name}/inc/nonedefined.xml &"
+         su "${user}" -c "xdg-mime default irfanview.desktop ${line} &"
       }
       which gio && {
-         su "${thisuser}" -c "gio mime  ${line} irfanview.desktop &"
+         su "${user}" -c "gio mime  ${line} irfanview.desktop &"
       }
       #which update-mime-database && {
-      #   case "${thisuser}" in
+      #   case "${user}" in
       #      root) update-mime-database %{_datarootdir}/mime & ;;
-      #      *) su "${thisuser}" -c "update-mime-database ~${thisuser}/.local/share/mime &";;
+      #      *) su "${user}" -c "update-mime-database ~${user}/.local/share/mime &";;
       #   esac
       #}
    done <<'EOW'
@@ -123,7 +137,7 @@ exit 0
 exit 0
 
 %postun
-# rpm postun 2017-01-02
+# rpm postun 2017-01-24
 if test "$1" = "0";
 then
 {
@@ -135,17 +149,24 @@ then
 
    # Remove icons
    which xdg-icon-resource && {
-      for num in 16 24 32 48 64;
+
+      # Remove default application icons
+      for theme in hicolor locolor Numix-Circle;
       do
-         # Remove application icons
-         for thistheme in hicolor locolor Numix-Circle;
+
+         # Remove scalable application icons
+         rm -f %{_datarootdir}/icons/${theme}/scalable/apps/irfan.svg
+
+         # Remove size application icons
+         for size in 16 24 32 48 64;
          do
-            xdg-icon-resource uninstall --context apps --size "${num}" --theme "${thistheme}" --noupdate irfan &
+            xdg-icon-resource uninstall --context apps --size "${size}" --theme "${theme}" --noupdate irfan &
          done
+
       done
 
-      # Remove scalable application icons
-      # custom: Numix-Circle uses svg for size 48
+      # Remove custom application icons
+      # custom: Numix-Circle apps 48 uses svg
       rm -f %{_datarootdir}/icons/Numix-Circle/48/apps/irfan.svg
       # custom: Lubuntu uses svg for size 48
       rm -f %{_datarootdir}/icons/Lubuntu/apps/48/irfan.svg
@@ -160,6 +181,7 @@ then
          touch --no-create %{_datarootdir}/icons/${word}
          gtk-update-icon-cache %{_datarootdir}/icons/${word} &
       done
+
    }
 } 1>/dev/null 2>&1
 fi
@@ -172,6 +194,7 @@ exit 0
 %dir /usr/share/irfan/inc/icons
 %dir /usr/share/irfan/docs
 %dir /usr/share/irfan/docs/debian
+/README.md
 %attr(755, -, -) /usr/share/irfan/irfan.sh
 /usr/share/irfan/inc/irfan_ver.txt
 /usr/share/irfan/inc/scrub.txt
@@ -224,10 +247,12 @@ exit 0
 %attr(644, -, -) /usr/share/irfan/irfanview.desktop
 /usr/bin/irfan
 /usr/share/irfan/irfanview
+
 %changelog
-* Tues Jan 24 2017 B Stack <bgstack15@gmail.com> 4.44-3
+* Tue Jan 24 2017 B Stack <bgstack15@gmail.com> 4.44-3
 - Updating normal installer to match the fixes made for 4.44-2 which was not published.
 - Added readme to root dir for github visitors
+- rewrote icon deployment to match bgscripts template
 
 * Mon Jan 23 2017 B Stack <bgstack15@gmail.com> 4.44-2
 - rewrote installation to use a customized winetricks installation
