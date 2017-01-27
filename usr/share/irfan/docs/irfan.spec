@@ -1,7 +1,7 @@
 Name:		irfan
 Version:	4.44
 #Release:	3%{?dist}
-Release:	3
+Release:	4
 Summary:	Irfanview 4.42, a graphics viewer
 
 Group:		Applications/Graphics
@@ -248,6 +248,9 @@ exit 0
 /usr/share/irfan/irfanview
 
 %changelog
+* Fri Jan 27 2017 B Stack <bgstack15@gmail.com> 4.44-4
+- Changed path conversion to use winepath which works way better than manual sed commands.
+
 * Tue Jan 24 2017 B Stack <bgstack15@gmail.com> 4.44-3
 - Updating normal installer to match the fixes made for 4.44-2 which was not published.
 - Added readme to root dir for github visitors

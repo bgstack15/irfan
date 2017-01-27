@@ -1,8 +1,19 @@
-#!/bin/sh -x
-# for Irfan rpm
-# packaged 2016-01-27 bgstack15@gmail.com
+#!/bin/sh
+# File: /usr/share/irfan/irfan.sh
+# Author: bgstack15@gmail.com
+# Startdate: 2016-01-29
+# Title: Wrapper script for passing files to Irfanview
+# Purpose: Converts file paths to a wine format and also handles compressed files
+# History: 2016-01-29 Initial quick script written. It used a bunch of sed commands to transform paths to a wine format.
+#    2017-01-17 
+# Usage: irfan /path/to/image /another/image/file
+# Reference:
+#    https://github.com/Zykr/IrfanViewLinux/blob/master/irfanview
+# Improve:
+#    handle zip/tar files
+#    write a function that expands file list.
 export WINEPREFIX=$HOME/.wine
-devtty=/dev/null
+devtty=/dev/pts/3
 
 # prepare files
 irfanargs=
@@ -11,18 +22,9 @@ if test -n "$1";
 then
    for word in "$@";
    do
-      echo "word=${word}" > ${devtty}
-      thisfile="$( printf "${word}" | sed -e '/^.$/d;s!^\.!!;' )"
-      echo "${thisfile}" | grep -qiE "^/" && : || thisfile="$( printf "%s%s" "$( pwd )/" "${thisfile}" )"
-      thisfile="$( echo "${thisfile}" | sed -e 's!^!z:/!;' -e 's!\/\+!\/!g;' )"
-      _tmp='\\'
-      grep -qiE "ubuntu|debian" /etc/*release 2>/dev/null && _tmp='\\\\'
-      thisfile="$( echo "${thisfile}" | sed -e 's!\/!'"${_tmp}"'!g;' )"
-      if test ! -d "${word}";
-      then
-         echo "${thisfile}" > ${devtty}
-         irfanfiles="${irfanfiles} \"${thisfile}\""
-      fi
+      echo "File ${word}" > ${devtty}
+      thisfile="$( winepath -w "${word}" )"
+      irfanfiles="${irfanfiles} \"${thisfile}\""
    done
 fi
 irfanfiles="${irfanfiles## }"
