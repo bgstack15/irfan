@@ -1,6 +1,15 @@
 #!/bin/bash
-# needs bgscripts >= 1.1-28
-. /usr/share/bgscripts/framework.sh
+
+# DETERMINE LOCATION OF FRAMEWORK
+while read flocation; do if test -x ${flocation} && test "$( ${flocation} --fcheck )" -ge 20170111; then frameworkscript="${flocation}"; break; fi; done <<EOFLOCATIONS
+/usr/share/bgscripts/framework.sh
+../framework.sh
+usr/share/bgscripts/framework.sh
+~/rpmbuild/SOURCES/bgscripts-1.1-31/usr/share/bgscripts/framework.sh
+EOFLOCATIONS
+test -z "${frameworkscript}" && echo "$0: framework not found. Aborted." 1>&2 && exit 4
+
+. ${frameworkscript} || echo "$0: framework did not run properly. Continuing..." 1>&2
 
 type="";
 
@@ -13,7 +22,7 @@ esac
 echo " $@ " | grep -qiE -- "help|usage|\s-h\s|\s-\?" 1>/dev/null 2>&1 && {
    # display help and exit
    less -F <<EOF
-pack utility version 2017-01-24b-irfan
+pack utility version 2017-01-27a-irfan
 usage: pack [ rpm | deb | tar | scrub ] [ --debug | -d {0-10} ]
 Provides a single command for building a package. This script is customized to each package.
 optional arguments:
@@ -52,12 +61,12 @@ cd "${rpmbuilddir}/SOURCES/${package}-${version}"
 { find * -type d -regex 'usr\/share\/irfan.*' ! -regex '.*irfan\/irfanview.*' | sed -e 's/^/%dir \//;' ; find * -mindepth 1 ! -regex '.*?.swp' ! -type d ! -regex '.*?DEBIAN.*?' | sed -e 's/^/\//;' -e 's/\(\(.*packaging\|.*README\)\.txt\)/%doc %attr(444, -, -) \1/;' -e 's/\(.*\.ini\)/%config %attr(666, -, -) \1/;' -e 's/\(.*\.sh\)/%attr(755, -, -) \1/;' -e 's/\(.*\.desktop\)/%attr(644, -, -) \1/;' ; echo "/usr/share/irfan/irfanview" ; } >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp"
 { printf '\n'; sed -n -e '/^\%changelog/,$p' "${rpmbuilddir}/SOURCES/${packagespecfile}" ; } >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp"
 mv -f "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp" "${rpmbuilddir}/SOURCES/${packagespecfile}"
-rm -rf ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"; cp -prf ${rpmbuilddir}/SOURCES/"${package}-${version}" ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"
-rm -rf ${rpmbuilddir}/SOURCES/"${package}-${shortversion}"/DEBIAN
+rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}"; cp -prf "${rpmbuilddir}/SOURCES/${package}-${version}" "${rpmbuilddir}/SOURCES/${package}-${shortversion}"
+rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/DEBIAN"
 cd "${rpmbuilddir}/SOURCES"
 rm -rf "${package}.tgz"; tar -zc --exclude='.git' --exclude 'README.md' -f "${package}.tgz" "${package}-${shortversion}"
 /bin/cp -pf "${rpmbuilddir}/SOURCES/${packagespecfile}" "${rpmbuilddir}/SPECS"
-cd "${rpmbuilddir}/RPMS/noarch"
+mkdir -p "${rpmbuilddir}/RPMS/noarch"; cd "${rpmbuilddir}/RPMS/noarch"
 rpmbuild -bb "${rpmbuilddir}/SPECS/${package}.spec"
 rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/" "${rpmbuilddir}/SOURCES/${package}.tgz"
 
@@ -68,15 +77,18 @@ rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/" "${rpmbuilddir}/SOUR
 # You need package dpkg-dev to build packages
 # if you copy-paste this, be sure to define package, version
 debdir=~/deb
-packagedebfilesdir="${package}-${version}/usr/share/${package}/docs/debian"
+debiandirmain="${package}-${version}/usr/share/${package}/docs/debian-${package}"
 cd "${debdir}/${package}-${version}/usr/bin"; ln -sf ../share/${package}/irfan.sh irfan
 cd "${debdir}/${package}-${version}"
-find . -mindepth 1 -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' ! -regex '.*?.swp' ! -regex '.*\.git.*' -printf '%P ' | xargs md5sum > "${debdir}/${packagedebfilesdir}/md5sums"
-rm -rf "${debdir}/${package}-${version}/DEBIAN/" 2>/dev/null; mkdir -p "${debdir}/${package}-${version}/DEBIAN/"
-cp -pf "${debdir}/${packagedebfilesdir}"/* "${debdir}/${package}-${version}/DEBIAN/"
+find . -mindepth 1 -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' ! -regex '.*?.swp' ! -regex '.*\.git.*' -printf '%P ' | xargs md5sum > "${debdir}/${debiandirmain}/md5sums"
 cd ~/deb
 mv "${debdir}/${package}-${version}/.git" "${debdir}/.git$$"
+
+# main
+rm -rf "${debdir}/${package}-${version}/DEBIAN/" 2>/dev/null; mkdir -p "${debdir}/${package}-${version}/DEBIAN/"
+cp -pf "${debdir}/${debiandirmain}"/* "${debdir}/${package}-${version}/DEBIAN/"
 fakeroot dpkg-deb -b "${debdir}/${package}-${version}"
+
 mv "${debdir}/.git$$" "${debdir}/${package}-${version}/.git"
 
       ;;

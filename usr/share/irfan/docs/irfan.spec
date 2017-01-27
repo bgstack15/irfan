@@ -193,7 +193,7 @@ exit 0
 %dir /usr/share/irfan/inc
 %dir /usr/share/irfan/inc/icons
 %dir /usr/share/irfan/docs
-%dir /usr/share/irfan/docs/debian
+%dir /usr/share/irfan/docs/debian-irfan
 %attr(755, -, -) /usr/share/irfan/irfan.sh
 /usr/share/irfan/inc/irfan_ver.txt
 /usr/share/irfan/inc/scrub.txt
@@ -202,7 +202,6 @@ exit 0
 /usr/share/irfan/inc/winetricks
 %attr(755, -, -) /usr/share/irfan/inc/irfan-vlc.sh
 /usr/share/irfan/inc/pack
-/usr/share/irfan/inc/irfanview64x64.png
 /usr/share/irfan/inc/icons/irfan-clear-48.png
 /usr/share/irfan/inc/icons/irfan-clear.svg
 /usr/share/irfan/inc/icons/irfan-circle-64.png
@@ -229,18 +228,17 @@ exit 0
 /usr/share/irfan/inc/icons/irfan-square.svg
 /usr/share/irfan/inc/icons/irfan-clear-32.png
 %attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
-/usr/share/irfan/inc/irfanview32x32.png
 %attr(755, -, -) /usr/share/irfan/uninstall-irfanview.sh
 %doc %attr(444, -, -) /usr/share/irfan/docs/README.txt
-/usr/share/irfan/docs/debian/postinst
-/usr/share/irfan/docs/debian/prerm
-/usr/share/irfan/docs/debian/control
-/usr/share/irfan/docs/debian/conffiles
-/usr/share/irfan/docs/debian/postrm
-/usr/share/irfan/docs/debian/md5sums
-/usr/share/irfan/docs/debian/preinst
 %doc %attr(444, -, -) /usr/share/irfan/docs/packaging.txt
 /usr/share/irfan/docs/irfan.spec
+/usr/share/irfan/docs/debian-irfan/postinst
+/usr/share/irfan/docs/debian-irfan/prerm
+/usr/share/irfan/docs/debian-irfan/control
+/usr/share/irfan/docs/debian-irfan/conffiles
+/usr/share/irfan/docs/debian-irfan/postrm
+/usr/share/irfan/docs/debian-irfan/md5sums
+/usr/share/irfan/docs/debian-irfan/preinst
 /usr/share/irfan/docs/files-for-versioning.txt
 %attr(755, -, -) /usr/share/irfan/install-irfanview.sh
 %attr(644, -, -) /usr/share/irfan/irfanview.desktop
@@ -250,6 +248,7 @@ exit 0
 %changelog
 * Fri Jan 27 2017 B Stack <bgstack15@gmail.com> 4.44-4
 - Changed path conversion to use winepath which works way better than manual sed commands.
+- Rewrote irfan.sh to allow tgz and zip file and directory expansion.
 
 * Tue Jan 24 2017 B Stack <bgstack15@gmail.com> 4.44-3
 - Updating normal installer to match the fixes made for 4.44-2 which was not published.
