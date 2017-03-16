@@ -10,9 +10,9 @@
 #    Ideas for zip expansion and winepath https://github.com/Zykr/IrfanViewLinux/blob/master/irfanview
 # Improve:
 export WINEPREFIX=$HOME/.wine
-devtty=/dev/pts/3
+devtty=/dev/null
 
-irfanversion="2017-01-27a"
+irfanversion="2017-03-15a"
 
 # Define functions
 function expandword {

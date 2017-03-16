@@ -8,6 +8,7 @@
 # History: 2016-12-06 modified to work properly during the rpm install phase, which is part of building the rpm and not actually deploying the rpm to a system.
 #    2017-01-02 referenced freefilesync.rpm file install-ffs.sh
 #    2017-01-23 made more generic and updated for bgscripts's new location
+#    2017-03-15 updated to smith122rpm location
 # Usage: Is used during the rpm build phase. It is also generally available.
 # Reference:
 # Improve:
@@ -98,7 +99,7 @@ tmp1=$( echo "${pver}" | tr -d '.' )
 sourcefile="http://irfanview.info/files/iview${tmp1}.zip"
 pluginssourcefile="http://irfanview.info/files/irfanview_plugins_${tmp1}.zip"
 source1search='\(www\.\)?irfanview\.info\/files'
-source1replace='mirror\.example\.com\/bgscripts\/irfanview'
+source1replace='albion320\.no-ip\.biz\/smith122\/repo\/rpm\/irfan'
 
 # Check dependencies
 if ! test -x "$( which curl 2>/dev/null)";

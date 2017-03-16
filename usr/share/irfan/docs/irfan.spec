@@ -1,8 +1,8 @@
 Name:		irfan
 Version:	4.44
 #Release:	3%{?dist}
-Release:	4
-Summary:	Irfanview 4.42, a graphics viewer
+Release:	5
+Summary:	an amazing graphics viewer from another operating system
 
 Group:		Applications/Graphics
 License:	Installer is CC-BY-SA, application is freeware
@@ -194,55 +194,55 @@ exit 0
 %dir /usr/share/irfan/inc/icons
 %dir /usr/share/irfan/docs
 %dir /usr/share/irfan/docs/debian-irfan
+/usr/bin/irfan
 %attr(755, -, -) /usr/share/irfan/irfan.sh
-/usr/share/irfan/inc/irfan_ver.txt
+%attr(755, -, -) /usr/share/irfan/install-irfanview.sh
+/usr/share/irfan/inc/pack
+%attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
+/usr/share/irfan/inc/icons/irfan-circle-64.png
+/usr/share/irfan/inc/icons/irfan-circle-24.png
+/usr/share/irfan/inc/icons/irfan-clear-16.png
+%attr(755, -, -) /usr/share/irfan/inc/icons/generate-icons.sh
+/usr/share/irfan/inc/icons/irfan-lubuntu-24.png
+/usr/share/irfan/inc/icons/irfan-square-16.png
+/usr/share/irfan/inc/icons/irfan-lubuntu-48.png
+/usr/share/irfan/inc/icons/irfan-clear.svg
+/usr/share/irfan/inc/icons/irfan-clear-64.png
+/usr/share/irfan/inc/icons/irfan-square-32.png
+/usr/share/irfan/inc/icons/irfan-square-64.png
+/usr/share/irfan/inc/icons/irfan-circle-48.png
+/usr/share/irfan/inc/icons/irfan-square-48.png
+/usr/share/irfan/inc/icons/irfan-clear-48.png
+/usr/share/irfan/inc/icons/irfan-lubuntu-32.png
+/usr/share/irfan/inc/icons/irfan-clear-24.png
+/usr/share/irfan/inc/icons/irfan-clear-32.png
+/usr/share/irfan/inc/icons/irfan-circle-16.png
+/usr/share/irfan/inc/icons/irfan-circle-32.png
+/usr/share/irfan/inc/icons/irfan-lubuntu.svg
+/usr/share/irfan/inc/icons/irfan-circle.svg
+/usr/share/irfan/inc/icons/irfan-square-24.png
+/usr/share/irfan/inc/icons/irfan-square.svg
+/usr/share/irfan/inc/icons/irfan-lubuntu-16.png
+/usr/share/irfan/inc/icons/irfan-lubuntu-64.png
+%attr(755, -, -) /usr/share/irfan/inc/irfan-vlc.sh
+/usr/share/irfan/inc/winetricks
 /usr/share/irfan/inc/scrub.txt
 %config %attr(666, -, -) /usr/share/irfan/inc/i_view32.ini
 /usr/share/irfan/inc/sha256sum.txt
-/usr/share/irfan/inc/winetricks
-%attr(755, -, -) /usr/share/irfan/inc/irfan-vlc.sh
-/usr/share/irfan/inc/pack
-/usr/share/irfan/inc/icons/irfan-clear-48.png
-/usr/share/irfan/inc/icons/irfan-clear.svg
-/usr/share/irfan/inc/icons/irfan-circle-64.png
-/usr/share/irfan/inc/icons/irfan-square-16.png
-/usr/share/irfan/inc/icons/irfan-circle-48.png
-/usr/share/irfan/inc/icons/irfan-clear-64.png
-/usr/share/irfan/inc/icons/irfan-lubuntu-24.png
-%attr(755, -, -) /usr/share/irfan/inc/icons/generate-icons.sh
-/usr/share/irfan/inc/icons/irfan-square-48.png
-/usr/share/irfan/inc/icons/irfan-clear-24.png
-/usr/share/irfan/inc/icons/irfan-circle-16.png
-/usr/share/irfan/inc/icons/irfan-circle-32.png
-/usr/share/irfan/inc/icons/irfan-square-64.png
-/usr/share/irfan/inc/icons/irfan-lubuntu-16.png
-/usr/share/irfan/inc/icons/irfan-lubuntu-48.png
-/usr/share/irfan/inc/icons/irfan-square-32.png
-/usr/share/irfan/inc/icons/irfan-square-24.png
-/usr/share/irfan/inc/icons/irfan-lubuntu-64.png
-/usr/share/irfan/inc/icons/irfan-circle.svg
-/usr/share/irfan/inc/icons/irfan-clear-16.png
-/usr/share/irfan/inc/icons/irfan-lubuntu.svg
-/usr/share/irfan/inc/icons/irfan-lubuntu-32.png
-/usr/share/irfan/inc/icons/irfan-circle-24.png
-/usr/share/irfan/inc/icons/irfan-square.svg
-/usr/share/irfan/inc/icons/irfan-clear-32.png
-%attr(755, -, -) /usr/share/irfan/inc/localize_git.sh
+/usr/share/irfan/inc/irfan_ver.txt
 %attr(755, -, -) /usr/share/irfan/uninstall-irfanview.sh
-%doc %attr(444, -, -) /usr/share/irfan/docs/README.txt
-%doc %attr(444, -, -) /usr/share/irfan/docs/packaging.txt
 /usr/share/irfan/docs/irfan.spec
-/usr/share/irfan/docs/debian-irfan/postinst
-/usr/share/irfan/docs/debian-irfan/prerm
-/usr/share/irfan/docs/debian-irfan/control
-/usr/share/irfan/docs/debian-irfan/conffiles
-/usr/share/irfan/docs/debian-irfan/postrm
-/usr/share/irfan/docs/debian-irfan/md5sums
-/usr/share/irfan/docs/debian-irfan/preinst
 /usr/share/irfan/docs/files-for-versioning.txt
-%attr(755, -, -) /usr/share/irfan/install-irfanview.sh
+%doc %attr(444, -, -) /usr/share/irfan/docs/packaging.txt
+/usr/share/irfan/docs/debian-irfan/control
+/usr/share/irfan/docs/debian-irfan/prerm
+/usr/share/irfan/docs/debian-irfan/postinst
+/usr/share/irfan/docs/debian-irfan/preinst
+/usr/share/irfan/docs/debian-irfan/conffiles
+/usr/share/irfan/docs/debian-irfan/md5sums
+/usr/share/irfan/docs/debian-irfan/postrm
+%doc %attr(444, -, -) /usr/share/irfan/docs/README.txt
 %attr(644, -, -) /usr/share/irfan/irfanview.desktop
-/usr/bin/irfan
 /usr/share/irfan/irfanview
 
 %changelog

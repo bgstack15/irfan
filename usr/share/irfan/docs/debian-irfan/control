@@ -1,12 +1,12 @@
 Package: irfan
-Version: 4.44-4
+Version: 4.44-5
 Architecture: all
 Essential: no
 Priority: extra
 Section: graphics
 Maintainer: B Stack <bgstack15@gmail.com>
 Installed-Size: 20000
-Description: Irfanview for debian
+Description: an amazing graphics viewer from another operating system
 Homepage: https://bgstack15.wordpress.com/
 Source: irfan.tgz
 Depends: wine-stable (>= 1.3)

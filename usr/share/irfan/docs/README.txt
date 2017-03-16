@@ -55,3 +55,8 @@ image/gif=irfanview.desktop
 /usr/share/applications/x-cinnamon-mimeapps.list
 /usr/share/applications/mimeinfo.cache
 ~/.local/share/applications/mimeinfo.cache
+
+###Changelog
+* Wed Mar 15 2017 B Stack <bgstack15@gmail.com> 4.44-5
+- Fixed the devtty issue in irfan.sh
+- Updated the install script for the smith122rpm repo

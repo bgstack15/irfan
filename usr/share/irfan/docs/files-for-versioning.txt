@@ -3,4 +3,4 @@ inc/scrub.txt
 inc/irfan_ver.txt
 docs/packaging.txt
 docs/irfan.spec
-docs/debian/control
+docs/debian-irfan/control
