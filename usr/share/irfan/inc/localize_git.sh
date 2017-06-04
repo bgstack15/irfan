@@ -1,2 +1,2 @@
 #!/bin/sh
-\cp -pRf /home/work/irfan.clean/.git /home/bgirton/rpmbuild/SOURCES/irfan-4.44-6
+\cp -pRf /home/work/irfan.clean/.git /home/bgstack15/rpmbuild/SOURCES/irfan-4.44-6

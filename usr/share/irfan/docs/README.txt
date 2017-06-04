@@ -60,3 +60,8 @@ image/gif=irfanview.desktop
 * Wed Mar 15 2017 B Stack <bgstack15@gmail.com> 4.44-5
 - Fixed the devtty issue in irfan.sh
 - Updated the install script for the smith122rpm repo
+
+* Sun Jun  4 2017 B Stack <bgstack15@gmail.com> 4.44-6
+- Updated deb package dependencies for ubuntu 16.04
+-  wine instead of wine-stable
+-  p7zip-full instead of p7zip
