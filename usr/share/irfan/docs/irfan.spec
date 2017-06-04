@@ -1,7 +1,7 @@
 Name:		irfan
 Version:	4.44
 #Release:	3%{?dist}
-Release:	5
+Release:	6
 Summary:	an amazing graphics viewer from another operating system
 
 Group:		Applications/Graphics
@@ -92,7 +92,7 @@ which xdg-icon-resource 1>/dev/null 2>&1 && {
 desktop-file-install --rebuild-mime-info-cache %{_datarootdir}/%{name}/irfanview.desktop 1>/dev/null 2>&1
 
 # Remove wine viewer things
-for user in bgstack15 bgstack15-local Bgstack15;
+for user in bgirton bgirton-local Bgirton;
 do
    for word in "application/pdf=wine-extension-pdf.desktop;" "image/gif=wine-extension-gif.desktop;" "image/jpeg=wine-extension-jpe.desktop;wine-extension-jfif.desktop;" "image/png=wine-extension-png.desktop;";
    do
@@ -101,7 +101,7 @@ do
 done
 
 # Set default application
-for user in root ${SUDO_USER} Bgstack15 bgstack15 bgstack15-local;
+for user in root ${SUDO_USER} Bgirton bgirton bgirton-local;
 do
 {
    ! getent passwd "${user}" && continue
@@ -234,6 +234,7 @@ exit 0
 /usr/share/irfan/docs/irfan.spec
 /usr/share/irfan/docs/files-for-versioning.txt
 %doc %attr(444, -, -) /usr/share/irfan/docs/packaging.txt
+/usr/share/irfan/docs/irfan-version.txt
 /usr/share/irfan/docs/debian-irfan/control
 /usr/share/irfan/docs/debian-irfan/prerm
 /usr/share/irfan/docs/debian-irfan/postinst

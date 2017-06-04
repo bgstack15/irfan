@@ -12,10 +12,10 @@
 export WINEPREFIX=$HOME/.wine
 devtty=/dev/null
 
-irfanversion="2017-03-15a"
+irfanversion="2017-06-04a"
 
 # Define functions
-function expandword {
+expandword() {
    # call: expandword "${word}"
    # if file, add it
    # if directory, expand it
@@ -56,7 +56,7 @@ function expandword {
    fi
 }
 
-function getwinepath {
+getwinepath() {
    # call: getwinepath "$foo"
    winepath -w "${@}"
 }
