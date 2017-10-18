@@ -5,4 +5,3 @@ build/localize_git.sh
 build/scrub.txt
 build/irfan.spec
 build/debian-irfan/control
-doc/packaging.txt

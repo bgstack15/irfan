@@ -65,3 +65,7 @@ image/gif=irfanview.desktop
 - Updated deb package dependencies for ubuntu 16.04
 -  wine instead of wine-stable
 -  p7zip-full instead of p7zip
+
+* Wed Oct 18 2017 B Stack <bgstack15@gmail.com> 4.50-1
+- Bumped version to latest upstream version
+- Rearranged directory structure to match current standards

@@ -1,7 +1,6 @@
 Name:		irfan
-Version:	4.44
-#Release:	3%{?dist}
-Release:	6
+Version:	4.50
+Release:	1
 Summary:	an amazing graphics viewer from another operating system
 
 Group:		Applications/Graphics
@@ -247,6 +246,9 @@ exit 0
 /usr/share/irfan/irfanview
 
 %changelog
+* Wed Oct 18 2017 B Stack <bgstack15@gmail.com> 4.50-1
+- Updated content. See doc/README.txt
+
 * Fri Jan 27 2017 B Stack <bgstack15@gmail.com> 4.44-4
 - Changed path conversion to use winepath which works way better than manual sed commands.
 - Rewrote irfan.sh to allow tgz and zip file and directory expansion.
