@@ -1,6 +1,0 @@
-inc/localize_git.sh
-inc/scrub.txt
-inc/irfan_ver.txt
-docs/packaging.txt
-docs/irfan.spec
-docs/debian-irfan/control
