@@ -85,7 +85,7 @@ cp -pf "${debdir}/${debiandirmain}"/* "${debdir}/${package}-${version}/DEBIAN/"
 mkdir "${debdir}/${package}" 2>/dev/null; rm -rf "${debdir}/${package}-${version}-work.tgz"
 tar -zc --exclude='.git*' --exclude='README.md' -f "${debdir}/${package}-${version}-work.tgz" -C "${debdir}/${package}-${version}" $( awk '{print $2}' "${debdir}/${package}-${version}/DEBIAN/md5sums" ) DEBIAN
 tar -zx -C "${debdir}/${package}" -f "${debdir}/${package}-${version}-work.tgz"
-fakeroot dpkg-deb -b "${debdir}/${package}-${version}"
+fakeroot dpkg-deb -b "${debdir}/${package}"
 mv -f "${debdir}/${package}.deb" "${debdir}/${package}-${version}.deb"
 rm -rf "${debdir}/${package}-${version}-work.tgz" "${debdir}/${package}"
 

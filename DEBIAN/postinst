@@ -1,6 +1,6 @@
-# deb post 2017-01-24
+# deb post 2017-10-18
 # the dpkg needs the install script.
-/usr/share/irfan/install-irfanview.sh || exit 2
+/usr/share/irfan/inc/install-irfanview.sh || exit 2
 # Deploy icons
 which xdg-icon-resource 1>/dev/null 2>&1 && {
    for num in 16 24 32 48 64;
