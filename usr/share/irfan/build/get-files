@@ -24,6 +24,7 @@ s/(\/usr)?\/lib\/systemd\/system\/(.*)/%{_unitdir}\/\2/;
 s/(\/usr)?\/lib\/systemd\/system-preset\/(.*)/%{_presetdir}\/\2/;
 s/(.*\/sudoers\.d\/.*)/%attr(440, root, root) \1/;
 '
+echo '/usr/share/irfan/irfanview'
 
       ;;
    deb)
