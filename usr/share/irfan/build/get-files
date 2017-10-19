@@ -1,0 +1,47 @@
+#!/bin/sh
+# File: get-files-core
+case "${1}" in
+   rpm)
+if test -n "${package}"; then cd ${rpmbuilddir}/SOURCES/"${package}-${version}"; else cd $( pwd | sed -r -e 's/(SOURCES\/[^\/]+\/).*/\1/;' ); fi
+
+### for rpm
+find * -type d -regextype grep \
+   -regex 'usr\/share\/irfan.*' ! -regex '.*irfan\/irfanview.*' \
+   | sed -e 's/^/%dir \//;'
+find * -mindepth 1 ! -name "${package}.spec.$$.swp" \
+   ! -type d -regextype grep \
+   ! -regex '.*.swp' \
+   ! -regex '.*DEBIAN.*' \
+   | sed -r -e '
+s/^/\//;
+s/(.*\.txt|\/usr\/share\/doc\/.*)/%doc %attr(444, -, -) \1/
+s/(.*bin.*)/%verify(link) \1/;
+s/(.*\.conf|.*\.ini)/%config %attr(666, -, -) \1/;
+s/(.*\.sh)/%attr(755, -, -) \1/;
+s/(.*\.desktop)/%attr(644, -, -) \1/;
+s/(.*)\.py$/\1\.py\n\1\.pyc\n\1\.pyo/;
+s/(\/usr)?\/lib\/systemd\/system\/(.*)/%{_unitdir}\/\2/;
+s/(\/usr)?\/lib\/systemd\/system-preset\/(.*)/%{_presetdir}\/\2/;
+s/(.*\/sudoers\.d\/.*)/%attr(440, root, root) \1/;
+'
+
+      ;;
+   deb)
+if test -n "${package}"; then cd ~/deb/"${package}-${version}"; else cd $( pwd | sed -r -e 's/(deb\/[^\/]+\/).*/\1/;' ); fi
+
+### for deb
+find . -mindepth 1 ! -name "${package}.spec\.$$\.swp" \
+   ! -type d -regextype grep \
+   ! -regex '.*hg.*' ! -regex '.*?debian-binary.*' \
+   ! -regex '.*DEBIAN.*' ! -regex '.*\.swp' ! -regex '.*\.git.*' ! -name 'README.md' \
+   ! -regex '.*\/gui\/.*' \
+   ! -regex '.*get-files$' \
+   ! -regex '.*rdp\.conf$' ! -regex '.*\/bin\/rdp$' \
+   -printf '%P '
+
+      ;;
+   *)
+      echo "FATAL ERROR: check ./pack or get-files-core. Please use [ rpm | deb ] option. Aborted." 1>&2
+      exit 1
+      ;;
+esac

@@ -54,7 +54,6 @@ rpmbuilddir=~/rpmbuild/
 packagespecfile="${package}-${version}/usr/share/${package}/build/${package}.spec"
 sed -n -e '1,/^\%files$/p;' "${rpmbuilddir}/SOURCES/${packagespecfile}" > "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp" #removes files and changelog
 cd "${rpmbuilddir}/SOURCES/${package}-${version}"
-#{ find * -type d -regex 'usr\/share\/irfan.*' ! -regex '.*irfan\/irfanview.*' | sed -e 's/^/%dir \//;' ; find * -mindepth 1 ! -regex '.*?.swp' ! -type d ! -regex '.*?DEBIAN.*?' | sed -e 's/^/\//;' -e 's/\(\(.*packaging\|.*README\)\.txt\)/%doc %attr(444, -, -) \1/;' -e 's/\(.*\.ini\)/%config %attr(666, -, -) \1/;' -e 's/\(.*\.sh\)/%attr(755, -, -) \1/;' -e 's/\(.*\.desktop\)/%attr(644, -, -) \1/;' ; echo "/usr/share/irfan/irfanview" ; } >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp"
 "${rpmbuilddir}/SOURCES/${package}-${version}/usr/share/${package}/build/get-files" rpm >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp"
 { printf '\n'; sed -n -e '/^\%changelog/,$p' "${rpmbuilddir}/SOURCES/${packagespecfile}" ; } >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp"
 mv -f "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp" "${rpmbuilddir}/SOURCES/${packagespecfile}"

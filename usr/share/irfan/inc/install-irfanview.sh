@@ -9,6 +9,7 @@
 #    2017-01-02 referenced freefilesync.rpm file install-ffs.sh
 #    2017-01-23 made more generic and updated for bgscripts's new location
 #    2017-03-15 updated to smith122rpm location
+#    2017-10-18 updated to match new directory structure
 # Usage: Is used during the rpm build phase. It is also generally available.
 # Reference:
 # Improve:
@@ -22,7 +23,7 @@ temp_sw=${RPM_BUILD_ROOT}/usr/share/${package}/source/iview.zip
 temp_plugins=${RPM_BUILD_ROOT}/usr/share/${package}/source/irfanview_plugins.zip
 ini_source=${RPM_BUILD_ROOT}/usr/share/${package}/inc/i_view32.ini
 ini_dest=${RPM_BUILD_ROOT}/usr/share/${package}/irfanview/i_view32.ini
-sha256sumfile=${RPM_BUILD_ROOT}/usr/share/irfan/inc/sha256sum.txt
+sha256sumfile=${RPM_BUILD_ROOT}/usr/share/${package}/inc/sha256sum.txt
 
 # Functions
 getsource() {

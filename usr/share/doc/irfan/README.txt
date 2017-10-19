@@ -3,8 +3,9 @@ Irfan README
 Irfanview is an image viewer for Windows. Irfan is an rpm that wraps around the application so, with wine, the application will run on Linux.
 http://www.irfanview.com/
 
-To send multiple files from the command line to irfan at once, you might need to use xargs -0 like this:
+To send multiple files from the command line to irfan at once, you might need to one of these commands:
 find . -print0 | xargs -0 /usr/share/irfan/irfan.sh
+find . | xargs -d'\n' /usr/share/irfan/irfan.sh
 If there are spaces in the filenames, it will break parsing unless you use the null character as a separator.
 
 ###Authors
@@ -20,7 +21,7 @@ Korora 24 Xfce
 Korora 24 Cinnamon
 Fedora 25 Cinnamon
 Lubuntu 16.10 Lxde
-Irfanview 4.42 and all plugins http://www.irfanview.com/download_sites.htm 
+Irfanview 4.50 and all plugins http://www.irfanview.com/download_sites.htm 
 
 ###License
 Irfanview is closed-source (freeware). Everything else is either GPL or CC-BY-SA4.0.
@@ -32,12 +33,18 @@ Icon derived from a source at http://www.onlinewebfonts.com/icon, licensed CC BY
 The font is weird in the dialogs, but is still mostly usable. This bug is not present when using wine 1.3.33 in PlayOnLinux, but I was not able to reproduce the effect with wine 1.8, because I don't know what I'm doing.
 
 ###How to maintain this package
-You need to collect the sha256sum for each iview442.zip and irfanview_plugins_442.zip files and put them into the usr/share/irfan/inc/sha256sum.txt file.
 ####On the mirror server
-cd /mnt/mirror/bgscripts/irfanview
-sha256sum iview*.zip irfanview_plugins*.zip > sha256sum.txt
+
+    # Download the latest irfanview version from:
+    cd /mnt/public/www/smith122/repo/rpm/irfan/
+    thisver=450
+    curl -O -J -e http://irfanview.info/files/iview${thisver}.zip http://irfanview.info/files/iview${thisver}.zip 
+    curl -O -J -e http://irfanview.info/files/irfanview_plugins_${thisver}.zip http://irfanview.info/files/irfanview_plugins_${thisver}.zip
+    # You need to collect the sha256sum for each iview442.zip and irfanview_plugins_442.zip files and put them into the usr/share/irfan/inc/sha256sum.txt file.
+    sha256sum iview*.zip irfanview_plugins*.zip > sha256sum.txt
+
 ####On the rpmbuild server
-curl http://mirror/bgscripts/irfanview/sha256sum.txt > ~/rpmbuild/SOURCES/irfan-4.44-1/usr/share/irfan/inc/sha256sum.txt
+    curl http://albion320.no-ip.biz/smith122/repo/rpm/irfan/sha256sum.txt > ~/rpmbuild/SOURCES/irfan-4.50-1/usr/share/irfan/inc/sha256sum.txt
 
 ###Future use
 # Mimetype list, probably ~/.local/share/applications/mimeapps.list
