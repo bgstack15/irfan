@@ -1,9 +1,87 @@
-# deb prerm 2017-10-18
-if test "$1" = "remove";
+# deb prerm 2018-02-21
+if test "$1" = "remove" ;
 then
+{
    # total uninstall
-   /usr/share/irfan/inc/uninstall-irfanview.sh ||:
+
+   # Mimetypes and default applications
+
+   which xdg-mime 1>/dev/null 2>&1 &&
+   {
+      for user in $( /usr/share/irfan/build/enumerate-users.sh ) ;
+      do
+
+         # Skip non-user objects
+         ! getent passwd "${user}" && continue
+
+         # Remove new mimetypes
+         #su "${user}" -c "xdg-mime uninstall /usr/share/irfan/inc/irfan-mimeinfo.xml &" &
+
+         # Unassign default applications
+         # xdg-mime default undo is not implemented
+         # gio uninstall is not implemented
+
+         # Update mimetype database
+         #which update-mime-database && {
+         #   case "${user}" in
+         #      root) update-mime-database /usr/share/mime & ;;
+         #      *) su "${user}" -c "update-mime-database ~${user}/.local/share/mime &" & ;;
+         #  esac
+         #}
+
+      done
+   }
+
+   # Remove systemd files
+   # NONE. See bgscripts for example.
+
+   # Remove desktop file
+   rm -f /usr/share/applications/irfanview.desktop
+   which update-desktop-database && update-desktop-database -q /usr/share/applications &
+
+   # Remove icons
+   which xdg-icon-resource && {
+
+      # Remove default application icons
+      for theme in hicolor locolor Numix-Circle Lubuntu ;
+      do
+
+         # Remove scalable application icons
+         rm -f /usr/share/icons/${theme}/scalable/apps/irfan.svg
+
+         # Remove size application icons
+         for size in 16 24 32 48 64 ;
+         do
+            xdg-icon-resource uninstall --context apps --size "${size}" --theme "${theme}" --noupdate irfan &
+         done
+
+      done
+
+      # remove custom application icons
+      # custom: Numix-Circle apps 48 uses svg
+      rm -f /usr/share/icons/Numix-Circle/48/apps/irfan.svg
+      # custom: Lubuntu uses svg for size 48
+      rm -f /usr/share/icons/Lubuntu/apps/48/irfan.svg
+      # default
+      rm -f /usr/share/icons/hicolor/48x48/apps/irfan.png
+      rm -f /usr/share/icons/hicolor/scalable/apps/irfan.svg
+
+      # Remove default mimetype icons
+      # NONE. See bgscripts.
+
+      # Remove custom mimetype icons
+      # NONE. See bgscripts.
+
+      # Update icon caches
+      xdg-icon-resource forceupdate &
+      for word in hicolor locolor Numix-Circle Numix Lubuntu elementary-xfce ;
+      do
+         touch --no-create /usr/share/icons/${word}
+         gtk-update-icon-cache /usr/share/icons/${word} &
+      done
+   }
+
+} 1>/dev/null 2>&1
 fi
 
-# if I ever need prerm Remove mimetype definitions, check freefilesync.rpm
 exit 0

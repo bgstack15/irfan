@@ -1,0 +1,35 @@
+#!/bin/sh
+# deb prep 2018-02-21
+
+# These variables are dynamically generated. Do not change anything between these two tags.
+# @INSERT_SOURCES
+SOURCE1="/home/bgstack15/deb/iview450.zip"
+SOURCE2="/home/bgstack15/deb/irfanview_plugins_450.zip"
+# @NO_MORE_SOURCES
+
+if test -n "yes" ;
+then
+   pushd ./usr/share/irfan/app
+   7z x "${SOURCE1}"
+   cd Plugins ; 7z x "${SOURCE2}" ; cd ..
+   # Adjust permissions on the directories
+   chmod -R 0755 Plugins Languages Toolbars
+   popd
+   GETFILES="$( find . -executable -name 'get-files' 2>/dev/null | head -n1 )"
+   ${GETFILES} deb | xargs -d'\0' md5sum > DEBIAN/md5sums 2>&1
+fi
+
+# deb build 2018-02-21
+
+# deb install 2018-02-21
+
+# rpm likes to clean and rsync
+# and takes two lines
+
+# Symlink to custom ini file
+! test -L ./usr/share/irfan/app/i_view32.ini && ln -sf ../inc/i_view32.ini ./usr/share/irfan/app/
+
+# Solve the readme problem
+find . -maxdepth 1 -name 'README.md' -exec rm -f {} \; 2>/dev/null || :
+
+exit 0

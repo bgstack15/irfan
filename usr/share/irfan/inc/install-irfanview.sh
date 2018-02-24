@@ -1,5 +1,5 @@
 #!/bin/sh
-# File: /usr/share/irfan/install-irfanview.sh
+# File: /usr/share/irfan/inc/install-irfanview.sh
 # Author: bgstack15
 # Startdate: 2016-11-28 10:46
 # Title: Script that Installs irfanview
@@ -10,7 +10,8 @@
 #    2017-01-23 made more generic and updated for bgscripts's new location
 #    2017-03-15 updated to smith122rpm location
 #    2017-10-18 updated to match new directory structure
-# Usage: Is used during the rpm build phase. It is also generally available.
+#    2018-02-20 deprecated, but still available
+# Usage: In case you want to manually fetch irfanview and deploy it. This is no longer used by the rpm/deb build utility.
 # Reference:
 # Improve:
 

@@ -19,7 +19,7 @@ esac
 echo " $@ " | grep -qiE -- "help|usage|\s-h\s|\s-\?" 1>/dev/null 2>&1 && {
    # display help and exit
    less -F <<EOF
-pack utility version 2017-10-18a-irfan
+pack utility version 2018-02-20a irfan
 usage: pack [ rpm | deb | tar | scrub ] [ --debug | -d {0-10} ]
 Provides a single command for building a package. This script is customized to each package.
 optional arguments:
@@ -33,8 +33,10 @@ exit 1
 # Derive package name and version number, for my simple package versions only.
 fullname="$( pwd | sed -e 's/.*\(SOURCES\|deb\)\///;s/\/.*//;' )"
 version="$( echo "${fullname}" | grep -oiE -- "-[0-9]{0,3}\.[0-9a-zA-Z]{0,5}-[0-9]{0,4}" | sed -e 's/^-//;' )"
-shortversion="$( echo "${version}" | sed -e 's/-.*//;' )"
+shortversion="$( echo "${version}" | sed -r -e 's/-.+$//;' )"
 package="$( echo "${fullname}" | sed -e "s/-${version}//;" )"
+
+set | grep -E '^(version|shortversion|fullname|package)=' 1>&2
 
 echo " $@ " | grep -qiE -- "rpm|rhel|redhat|centos|fedora|korora" 1>/dev/null 2>&1 && type=rpm
 echo " $@ " | grep -qiE -- "debian|ubuntu|devuan|deb\s|dpkg" 1>/dev/null 2>&1 && type=dpkg
@@ -52,15 +54,16 @@ case "${type}" in
 # if you copy-paste this, be sure to define package, version, shortversion
 rpmbuilddir=~/rpmbuild/
 packagespecfile="${package}-${version}/usr/share/${package}/build/${package}.spec"
+. "${rpmbuilddir}/SOURCES/${package}-${version}/usr/share/${package}/build/get-sources"
 sed -n -e '1,/^\%files$/p;' "${rpmbuilddir}/SOURCES/${packagespecfile}" > "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp" #removes files and changelog
 cd "${rpmbuilddir}/SOURCES/${package}-${version}"
 "${rpmbuilddir}/SOURCES/${package}-${version}/usr/share/${package}/build/get-files" rpm >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp"
 { printf '\n'; sed -n -e '/^\%changelog/,$p' "${rpmbuilddir}/SOURCES/${packagespecfile}" ; } >> "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp"
 mv -f "${rpmbuilddir}/SOURCES/${packagespecfile}.$$.swp" "${rpmbuilddir}/SOURCES/${packagespecfile}"
 rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}"; cp -prf "${rpmbuilddir}/SOURCES/${package}-${version}" "${rpmbuilddir}/SOURCES/${package}-${shortversion}"
-rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/DEBIAN"
+rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/debian"
 cd "${rpmbuilddir}/SOURCES"
-rm -rf "${package}.tgz"; tar -zc --exclude='.git*' --exclude 'README.md' -f "${package}.tgz" "${package}-${shortversion}"
+rm -rf "${package}.tgz"; tar -zc --exclude='.git*' --exclude './README.md' -f "${package}.tgz" "${package}-${shortversion}"
 cp -p "${rpmbuilddir}/SOURCES/${packagespecfile}" "${rpmbuilddir}/SPECS"
 mkdir -p "${rpmbuilddir}/RPMS/noarch"; cd "${rpmbuilddir}/RPMS/noarch"
 rpmbuild -bb "${rpmbuilddir}/SPECS/${package}.spec"
@@ -74,22 +77,26 @@ rm -rf "${rpmbuilddir}/SOURCES/${package}-${shortversion}/" "${rpmbuilddir}/SOUR
 # if you copy-paste this, be sure to define package, version
 debdir=~/deb
 debiandirmain="${package}-${version}/usr/share/${package}/build/debian-${package}"
+# get-sources needs the spec file
+packagespecfile="${package}-${version}/usr/share/${package}/build/${package}.spec"
+sed -i -r -e '/@INSERT_SOURCES/,/@NO_MORE_SOURCES/{/^SOURCE/d}' "${debdir}/${package}-${version}/usr/share/${package}/build/debian-${package}/rules"
+. "${debdir}/${package}-${version}/usr/share/${package}/build/get-sources"
 cd "${debdir}/${package}-${version}"
-#find . -mindepth 1 -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' ! -regex '.*?.swp' ! -regex '.*\.git.*' -printf '%P ' | xargs md5sum > "${debdir}/${debiandirmain}/md5sums"
-"${debdir}/${package}-${version}/usr/share/${package}/build/get-files" deb | xargs md5sum > "${debdir}/${debiandirmain}/md5sums"
-cd "${debdir}"
+"${debdir}/${package}-${version}/usr/share/${package}/build/get-files" deb | xargs -d'\0' md5sum > "${debdir}/${debiandirmain}/md5sums"
 
 # main
-rm -rf "${debdir}/${package}-${version}/DEBIAN/" 2>/dev/null; mkdir -p "${debdir}/${package}-${version}/DEBIAN/"
+rm -rf "${debdir}/${package}-${version}/DEBIAN" 2>/dev/null; mkdir -p "${debdir}/${package}-${version}/DEBIAN"
 cp -pf "${debdir}/${debiandirmain}"/* "${debdir}/${package}-${version}/DEBIAN/"
-mkdir "${debdir}/${package}" 2>/dev/null; rm -rf "${debdir}/${package}-${version}-work.tgz"
-tar -zc --exclude='.git*' --exclude='README.md' -f "${debdir}/${package}-${version}-work.tgz" -C "${debdir}/${package}-${version}" $( awk '{print $2}' "${debdir}/${package}-${version}/DEBIAN/md5sums" ) DEBIAN
-tar -zx -C "${debdir}/${package}" -f "${debdir}/${package}-${version}-work.tgz"
+mkdir "${debdir}/${package}" 2>/dev/null; rm -rf "${debdir}/${package}_${shortversion}.orig.tar.gz"
+tar -zc --exclude='.git*' --exclude='README.md' -f "${debdir}/${package}_${shortversion}.orig.tar.gz" -C "${debdir}/${package}-${version}" $( awk '{print $2}' "${debdir}/${package}-${version}/DEBIAN/md5sums" ) $( find "${debdir}/${package}-${version}" -mindepth 1 -type d ! -regex '.*\/.git.*' -printf '%P\n' )
+tar -zx -C "${debdir}/${package}" -f "${debdir}/${package}_${shortversion}.orig.tar.gz"
+pushd "${debdir}/${package}"
+"DEBIAN/rules"
 fakeroot dpkg-deb -b "${debdir}/${package}"
+#debmake ; debuild
+popd
 mv -f "${debdir}/${package}.deb" "${debdir}/${package}-${version}.deb"
-rm -rf "${debdir}/${package}-${version}-work.tgz" "${debdir}/${package}"
-
-#mv "${debdir}/.git$$" "${debdir}/${package}-${version}/.git"
+rm -rf "${debdir}/${package}_${shortversion}.orig.tar.gz" "${debdir:-~/deb}/${package}" "${debdir}/${package}-${version}/DEBIAN"
 
       ;;
    targz)
@@ -107,7 +114,7 @@ tar -zcf ./"${package}-${version}".master.tgz "${package}-${version}"/
 # if you copy-paste this, be sure to define package, version
 cd ~/deb 2>/dev/null || cd ~/rpmbuild/SOURCES
 cd "$( find . -name "*scrub.txt" | grep -iE "${package}-${version}\/" | xargs dirname )"
-/usr/share/bgscripts/scrub.py
+/usr/share/bgscripts/py/scrub.py
 
       ;;
    unknown)

@@ -1,21 +1,31 @@
 #!/bin/sh
-# File: get-files-core
+# File: get-files
 case "${1}" in
    rpm)
 if test -n "${package}"; then cd ${rpmbuilddir}/SOURCES/"${package}-${version}"; else cd $( pwd | sed -r -e 's/(SOURCES\/[^\/]+\/).*/\1/;' ); fi
+test -z "${package}" && package="$( basename "$( pwd )" | sed -r -e "s/-[0-9.\-]+$//;" )"
 
 ### for rpm
 find * -type d -regextype grep \
-   -regex 'usr\/share\/irfan.*' ! -regex '.*irfan\/irfanview.*' \
+   -regex "usr\/share\/${package}.*" \
+   ! -regex ".*\/${package}\/app" \
+   ! -regex ".*\/${package}\/source" \
    | sed -e 's/^/%dir \//;'
-find * -mindepth 1 ! -name "${package}.spec.$$.swp" \
-   ! -type d -regextype grep \
+
+find * -mindepth 1 ! -name "${package}.spec.$$.swp" -regextype grep \
+   \( \
+      ! -type d -o \
+      -regex ".*\/${package}\/app" -o \
+      -regex ".*\/${package}\/source" \
+   \) \
+   ! -regex ".*\/${package}\/source\/.+" \
+   ! -regex ".*\/${package}\/app\/.+" \
    ! -regex '.*.swp' \
    ! -regex '.*DEBIAN.*' \
    | sed -r -e '
 s/^/\//;
-s/(.*\.txt|\/usr\/share\/doc\/.*)/%doc %attr(444, -, -) \1/
-s/(.*bin.*)/%verify(link) \1/;
+s/(.*packaging\.txt|.*README\.(txt|md)|\/usr\/share\/doc\/.*)/%doc %attr(444, -, -) \1/
+s/(.*bin\/.*)/%verify(link) \1/;
 s/(.*\.conf|.*\.ini)/%config %attr(666, -, -) \1/;
 s/(.*\.sh)/%attr(755, -, -) \1/;
 s/(.*\.desktop)/%attr(644, -, -) \1/;
@@ -24,25 +34,24 @@ s/(\/usr)?\/lib\/systemd\/system\/(.*)/%{_unitdir}\/\2/;
 s/(\/usr)?\/lib\/systemd\/system-preset\/(.*)/%{_presetdir}\/\2/;
 s/(.*\/sudoers\.d\/.*)/%attr(440, root, root) \1/;
 '
-echo '/usr/share/irfan/irfanview'
 
       ;;
    deb)
 if test -n "${package}"; then cd ~/deb/"${package}-${version}"; else cd $( pwd | sed -r -e 's/(deb\/[^\/]+\/).*/\1/;' ); fi
+test -z "${package}" && package="$( basename "$( pwd )" )"
 
 ### for deb
 find . -mindepth 1 ! -name "${package}.spec\.$$\.swp" \
    ! -type d -regextype grep \
    ! -regex '.*hg.*' ! -regex '.*?debian-binary.*' \
-   ! -regex '.*DEBIAN.*' ! -regex '.*\.swp' ! -regex '.*\.git.*' ! -name 'README.md' \
+   ! -regex '.*DEBIAN.*' ! -regex './debian\/.*' ! -regex '.*\.swp' ! -regex '.*\.git.*' ! -name 'README.md' \
    ! -regex '.*\/gui\/.*' \
-   ! -regex '.*get-files$' \
    ! -regex '.*rdp\.conf$' ! -regex '.*\/bin\/rdp$' \
-   -printf '%P '
+   -printf '%P\0'
 
       ;;
    *)
-      echo "FATAL ERROR: check ./pack or get-files-core. Please use [ rpm | deb ] option. Aborted." 1>&2
+      echo "FATAL ERROR: check ./pack or get-files. Please use [ rpm | deb ] option. Aborted." 1>&2
       exit 1
       ;;
 esac

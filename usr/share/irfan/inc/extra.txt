@@ -1,0 +1,16 @@
+###Future use
+# Mimetype list, probably ~/.local/share/applications/mimeapps.list
+[Default Applications]
+image/png=irfanview.desktop
+image/jpeg=irfanview.desktop
+image/tiff=irfanview.desktop
+image/bmp=irfanview.desktop
+image/gif=irfanview.desktop
+# possible locations
+/usr/share/applications/gnome-mimeapps.list
+/usr/share/applications/mimeapps.list
+/usr/share/applications/xfce-mimeapps.list
+/usr/share/applications/kde-mimeapps.list
+/usr/share/applications/x-cinnamon-mimeapps.list
+/usr/share/applications/mimeinfo.cache
+~/.local/share/applications/mimeinfo.cache

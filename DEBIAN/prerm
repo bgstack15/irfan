@@ -1,9 +1,0 @@
-# deb prerm 2017-10-18
-if test "$1" = "remove";
-then
-   # total uninstall
-   /usr/share/irfan/inc/uninstall-irfanview.sh ||:
-fi
-
-# if I ever need prerm Remove mimetype definitions, check freefilesync.rpm
-exit 0

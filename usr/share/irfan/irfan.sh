@@ -12,7 +12,7 @@
 export WINEPREFIX=$HOME/.wine
 devtty=/dev/null
 
-irfanversion="2017-06-04a"
+irfanversion="2018-02-19a"
 
 # Define functions
 expandword() {
@@ -64,7 +64,7 @@ getwinepath() {
 # Define variables
 alltempdirs=""
 exec_name="i_view32.exe"
-exec_path="/usr/share/irfan/irfanview/i_view32.exe"
+exec_path="/usr/share/irfan/app/i_view32.exe"
 
 # prepare files
 irfanargs=

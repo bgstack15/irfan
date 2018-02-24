@@ -1,5 +1,5 @@
 #!/bin/sh
-# File: /usr/share/irfan/uninstall-irfanview.sh
+# File: /usr/share/irfan/inc/uninstall-irfanview.sh
 # Author: bgstack15
 # Startdate: 2016-11-29 08:58
 # Title: Script that uninstalls irfanview
@@ -7,7 +7,8 @@
 # Package: irfan
 # History:
 #    2017-01-02 updated
-# Usage: Generally available. Not needed by the rpm specifically.
+#    2018-02-20 deprecated, but still available
+# Usage: In case you want to clean up manually. This is no longer used by the rpm/deb build utility.
 # Reference: install-irfanview.sh
 # Improve:
 
