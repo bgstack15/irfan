@@ -22,7 +22,7 @@ A build dependency is my [bgscripts](https://github.com/bgstack15/bgscripts) pac
 Download this wrapper package source and run the pack utility.
 
     package=irfan
-    thisver=4.50-2
+    thisver=4.51-1
     mkdir -p ~/rpmbuild/{SOURCES,RPMS,SPECS,BUILD,BUILDROOT}
     cd ~/rpmbuild/SOURCES
     git clone https://github.com/bgstack15/irfan "${package}-${thisver}"
@@ -51,13 +51,13 @@ For a new release from upstream, you have to derive the sha256sum and add it to 
 ## On the rpmbuild server
 For a new version release, download the latest sha256sum file from the maintainer server. And then pull up the list of files that need to be manually updated for version numbers.
 
-    cd ~/rpmbuild/SOURCES/irfan-4.50-2/usr/share/irfan
+    cd ~/rpmbuild/SOURCES/irfan-4.51-1/usr/share/irfan
     curl http://albion320.no-ip.biz/smith122/repo/patch/irfan/sha256sum.txt > ./inc/sha256sum.txt
     vi $( cat build/files-for-versioning.txt )
 
 # Authors
 Irfan Skiljan [http://www.irfanview.com/](http://www.irfanview.com)
-Bgstack15 [https://bgstack15.wordpress.com](https://bgsstack15.wordpress.com)
+Bgstack15 [https://bgstack15.wordpress.com](https://bgstack15.wordpress.com)
 
 # License
 Irfanview is closed-source (freeware). All the value-add parts of the irfan package are [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
@@ -128,3 +128,6 @@ On some systems, wine uses a font set that is hard to read in the dialogs, but i
 * Wed Feb 21 2018 B Stack <bgstack15@gmail.com> 4.50-2
 - Modernized package directory layout and build process and scriptlets/maintainer scripts
 - Updated package dependencies to be more tolerant of possible wine versions
+
+* Sun Apr  8 2018 B Stack <bgstack15@gmail.com> 4.51-1
+- Update to use latest upstream

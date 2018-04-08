@@ -1,4 +1,4 @@
 # the only uncommented line in this file should contain the irfanview version
 # retrievable from
-# curl -s http://www.irfanview.com/ | grep -oiE 'current version [0-9.]+' | sort | uniq | tr -dc '[0-9.]'
-4.50
+# curl -L -s https://www.irfanview.com/ | grep -oiE 'current version [0-9.]+' | sort | uniq | tr -dc '[0-9.]'
+4.51

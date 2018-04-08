@@ -1,20 +1,20 @@
 %define dummy_package 0
-%define devtty "/dev/pts/5"
+%define devtty "/dev/null"
 Name:		irfan
-Version:	4.50
-Release:	2
+Version:	4.51
+Release:	1
 Summary:	an amazing graphics viewer from another operating system
 
 Group:   Applications/Graphics
 License:	Freeware, CC-BY-SA 4.0
 URL:		http://bgstack15.wordpress.com
 Source0:	irfan.tgz
-Source1: http://www.irfanview.info/files/iview450.zip
-Source2: http://www.irfanview.info/files/irfanview_plugins_450.zip
+Source1: http://www.irfanview.info/files/iview451.zip
+Source2: http://www.irfanview.info/files/irfanview_plugins_451.zip
 
 Packager:	Bgstack15 <bgstack15@gmail.com>
 Buildarch:	noarch
-#BuildRequires:	
+BuildRequires:	bgscripts-core >= 1.3-3
 Requires:	(wine >= 1.3 or /usr/bin/wine)
 Requires(pre):	bgscripts >= 1.1-20, curl, p7zip
 
@@ -132,7 +132,7 @@ which xdg-icon-resource 1>%{devtty} 2>&1 && {
 desktop-file-install --rebuild-mime-info-cache %{_datadir}/%{name}/irfanview.desktop 1>%{devtty} 2>&1
 
 # Remove wine viewer things
-for td in $( %{_datadir}/%{name}/build/enumerate-users.sh homedir ) ;
+for td in $( /usr/share/bgscripts/enumerate-users.sh homedir ) ;
 do
    for word in "application/pdf=wine-extension-pdf.desktop;" "image/gif=wine-extension-gif.desktop;" "image/jpeg=wine-extension-jpe.desktop;wine-extension-jfif.desktop;" "image/png=wine-extension-png.desktop;" ;
    do
@@ -144,7 +144,7 @@ done
 # Mimetypes and default applications
 which xdg-mime 1>/dev/null 2>&1 &&
 {
-   for user in $( %{_datadir}/%{name}/build/enumerate-users.sh ) ;
+   for user in $( /usr/share/bgscripts/enumerate-users.sh ) ;
    do
    
       # Skip non-user objects
@@ -201,7 +201,7 @@ then
    which xdg-mime 1>/dev/null 2>&1 &&
    {
 
-      for user in $( %{_datadir}/%{name}/build/enumerate-users.sh ) ;
+      for user in $( /usr/share/bgscripts/enumerate-users.sh ) ;
       do
 
          # Skip non-user objects
