@@ -131,3 +131,4 @@ On some systems, wine uses a font set that is hard to read in the dialogs, but i
 
 * Sun Apr  8 2018 B Stack <bgstack15@gmail.com> 4.51-1
 - Update to use latest upstream
+- Minor fixes to build process and documentation
