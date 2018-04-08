@@ -10,7 +10,7 @@ License:	Freeware, CC-BY-SA 4.0
 URL:		http://bgstack15.wordpress.com
 Source0:	irfan.tgz
 Source1: http://www.irfanview.info/files/iview451.zip
-Source2: http://www.irfanview.info/files/irfanview_plugins_451.zip
+Source2: http://www.irfanview.info/files/iview451_plugins.zip
 
 Packager:	Bgstack15 <bgstack15@gmail.com>
 Buildarch:	noarch

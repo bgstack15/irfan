@@ -42,10 +42,10 @@ The generated rpm will be in ~/rpmbuild/RPMS/noarch.
 ## On the mirror server
 For a new release from upstream, you have to derive the sha256sum and add it to the sha256sum.txt file. It is recommended to store a local copy of the upstream release files.
 
-    thisver=450
+    thisver=451
     cd /mnt/public/www/smith122/repo/patch/irfan
     curl -O -J -e "http://irfanview.info/files/iview${thisver}.zip" "http://irfanview.info/files/iview${thisver}.zip"
-    curl -O -J -e "http://irfanview.info/files/irfanview_plugins_${thisver}.zip" "http://irfanview.info/files/irfanview_plugins_${thisver}.zip"
+    curl -O -J -e "http://irfanview.info/files/iview${thisver}_plugins.zip" "http://irfanview.info/files/iview${thisver}_plugins.zip"
     sha256sum *zip > sha256sum.txt
 
 ## On the rpmbuild server
