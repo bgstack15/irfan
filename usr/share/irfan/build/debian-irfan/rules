@@ -3,8 +3,8 @@
 
 # These variables are dynamically generated. Do not change anything between these two tags.
 # @INSERT_SOURCES
-SOURCE1="/home/bgstack15/deb/iview450.zip"
-SOURCE2="/home/bgstack15/deb/irfanview_plugins_450.zip"
+SOURCE1="/home/bgirton/deb/iview451.zip"
+SOURCE2="/home/bgirton/deb/iview451_plugins.zip"
 # @NO_MORE_SOURCES
 
 if test -n "yes" ;
