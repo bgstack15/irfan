@@ -88,6 +88,7 @@ sed -r -e 's4^4s/%\\{4;' -e 's/=/\\}\//;' -e 's4$4\/g;4;' "${tmpfile1}" > "${fil
 dist="$( rpm -E '%{dist}' 2>/dev/null )"
 
 # Interpret the rpm spec file and download to ~/rpmbuild/SOURCES all the Source[0-9]?: files.
+version_num="$( echo "${shortversion}" | tr -d '\.' )"
 getthesefiles1="$( TMPDIR="${gs_tmpdir}" mktemp )"
 pushd "${__inputdir}" 1>/dev/null 2>&1
 grep -E "^\s*Source.?:" "${__inputdir}/${packagespecfile}" | \
@@ -95,6 +96,7 @@ grep -E "^\s*Source.?:" "${__inputdir}/${packagespecfile}" | \
    sed -r -e "
 s/%\{name\}/${package}/g;
 s/%\{version\}/${shortversion}/g;
+s/%\{version_num\}/${version_num}/g;
 s/%\{\??dist\}/${dist}/g;
 s/^\s*//;
 " -f "${filterfile1}" | \

@@ -4,17 +4,19 @@ Name:		irfan
 Version:	4.51
 Release:	1
 Summary:	an amazing graphics viewer from another operating system
+%define version_num "%( echo %version | tr -d '\.' )"
 
 Group:   Applications/Graphics
 License:	Freeware, CC-BY-SA 4.0
 URL:		http://bgstack15.wordpress.com
 Source0:	irfan.tgz
-Source1: http://www.irfanview.info/files/iview451.zip
-Source2: http://www.irfanview.info/files/iview451_plugins.zip
+Source1: http://www.irfanview.info/files/iview%{version_num}.zip
+Source2: http://www.irfanview.info/files/iview%{version_num}_plugins.zip
 
 Packager:	Bgstack15 <bgstack15@gmail.com>
 Buildarch:	noarch
 BuildRequires:	bgscripts-core >= 1.3-3
+BuildRequires:	p7zip-plugins
 Requires:	(wine >= 1.3 or /usr/bin/wine)
 Requires(pre):	bgscripts >= 1.1-20, curl, p7zip
 
@@ -288,67 +290,65 @@ exit 0
 
 %files
 %dir /usr/share/irfan
+%dir /usr/share/irfan/build
+%dir /usr/share/irfan/build/debian-irfan
 %dir /usr/share/irfan/inc
 %dir /usr/share/irfan/inc/icons
 %dir /usr/share/irfan/inc/icons/apps
-%dir /usr/share/irfan/build
-%dir /usr/share/irfan/build/debian-irfan
-%doc %attr(444, -, -) /usr/share/doc/irfan/version.txt
-%doc %attr(444, -, -) /usr/share/doc/irfan/README.md
+%verify(link) /usr/bin/irfan
 %attr(644, -, -) /usr/share/irfan/irfanview.desktop
-/usr/share/irfan/doc
-/usr/share/irfan/inc/irfan_ver.txt
-/usr/share/irfan/inc/sha256sum.txt
-%attr(755, -, -) /usr/share/irfan/inc/install-irfanview.sh
-%attr(755, -, -) /usr/share/irfan/inc/irfan-vlc.sh
-/usr/share/irfan/inc/extra.txt
-%attr(755, -, -) /usr/share/irfan/inc/uninstall-irfanview.sh
-/usr/share/irfan/inc/icons/apps/irfan-square-16.png
-/usr/share/irfan/inc/icons/apps/irfan-lubuntu.svg
-/usr/share/irfan/inc/icons/apps/irfan-clear-48.png
-/usr/share/irfan/inc/icons/apps/irfan-circle-24.png
-/usr/share/irfan/inc/icons/apps/irfan-square-48.png
-/usr/share/irfan/inc/icons/apps/irfan-clear-16.png
-/usr/share/irfan/inc/icons/apps/irfan-circle-16.png
-/usr/share/irfan/inc/icons/apps/irfan-clear-32.png
-/usr/share/irfan/inc/icons/apps/irfan-lubuntu-48.png
-/usr/share/irfan/inc/icons/apps/irfan-square-64.png
-/usr/share/irfan/inc/icons/apps/irfan-lubuntu-32.png
-/usr/share/irfan/inc/icons/apps/irfan-clear-64.png
-/usr/share/irfan/inc/icons/apps/irfan-lubuntu-16.png
-/usr/share/irfan/inc/icons/apps/irfan-lubuntu-24.png
-/usr/share/irfan/inc/icons/apps/irfan-circle-48.png
-/usr/share/irfan/inc/icons/apps/irfan-circle-64.png
-/usr/share/irfan/inc/icons/apps/irfan-circle.svg
-/usr/share/irfan/inc/icons/apps/irfan-square.svg
-/usr/share/irfan/inc/icons/apps/irfan-square-24.png
-/usr/share/irfan/inc/icons/apps/irfan-clear-24.png
-/usr/share/irfan/inc/icons/apps/irfan-circle-32.png
-/usr/share/irfan/inc/icons/apps/irfan-clear.svg
-/usr/share/irfan/inc/icons/apps/irfan-lubuntu-64.png
-/usr/share/irfan/inc/icons/apps/irfan-square-32.png
-%attr(755, -, -) /usr/share/irfan/inc/icons/generate-icons.sh
-%config %attr(666, -, -) /usr/share/irfan/inc/i_view32.ini
-/usr/share/irfan/source
-/usr/share/irfan/app
-%config %attr(666, -, -) /usr/share/irfan/app/i_view32.ini
+/usr/share/irfan/build/irfan.spec
+/usr/share/irfan/build/files-for-versioning.txt
 /usr/share/irfan/build/get-sources
 /usr/share/irfan/build/get-files
-%attr(755, -, -) /usr/share/irfan/build/enumerate-users.sh
-/usr/share/irfan/build/pack
-/usr/share/irfan/build/files-for-versioning.txt
-/usr/share/irfan/build/irfan.spec
-/usr/share/irfan/build/debian-irfan/compat
-/usr/share/irfan/build/debian-irfan/md5sums
-/usr/share/irfan/build/debian-irfan/preinst
-/usr/share/irfan/build/debian-irfan/prerm
 /usr/share/irfan/build/debian-irfan/control
 /usr/share/irfan/build/debian-irfan/postrm
-/usr/share/irfan/build/debian-irfan/rules
 /usr/share/irfan/build/debian-irfan/conffiles
+/usr/share/irfan/build/debian-irfan/md5sums
+/usr/share/irfan/build/debian-irfan/rules
 /usr/share/irfan/build/debian-irfan/postinst
+/usr/share/irfan/build/debian-irfan/compat
+/usr/share/irfan/build/debian-irfan/preinst
+/usr/share/irfan/build/debian-irfan/prerm
+/usr/share/irfan/build/pack
 %attr(755, -, -) /usr/share/irfan/irfan.sh
-%verify(link) /usr/bin/irfan
+/usr/share/irfan/doc
+%attr(755, -, -) /usr/share/irfan/inc/icons/generate-icons.sh
+/usr/share/irfan/inc/icons/apps/irfan-square-48.png
+/usr/share/irfan/inc/icons/apps/irfan-clear-48.png
+/usr/share/irfan/inc/icons/apps/irfan-circle-24.png
+/usr/share/irfan/inc/icons/apps/irfan-circle-64.png
+/usr/share/irfan/inc/icons/apps/irfan-circle-16.png
+/usr/share/irfan/inc/icons/apps/irfan-clear.svg
+/usr/share/irfan/inc/icons/apps/irfan-circle-48.png
+/usr/share/irfan/inc/icons/apps/irfan-circle.svg
+/usr/share/irfan/inc/icons/apps/irfan-clear-32.png
+/usr/share/irfan/inc/icons/apps/irfan-lubuntu-32.png
+/usr/share/irfan/inc/icons/apps/irfan-square.svg
+/usr/share/irfan/inc/icons/apps/irfan-circle-32.png
+/usr/share/irfan/inc/icons/apps/irfan-square-32.png
+/usr/share/irfan/inc/icons/apps/irfan-lubuntu.svg
+/usr/share/irfan/inc/icons/apps/irfan-square-24.png
+/usr/share/irfan/inc/icons/apps/irfan-square-64.png
+/usr/share/irfan/inc/icons/apps/irfan-clear-64.png
+/usr/share/irfan/inc/icons/apps/irfan-clear-24.png
+/usr/share/irfan/inc/icons/apps/irfan-lubuntu-16.png
+/usr/share/irfan/inc/icons/apps/irfan-lubuntu-24.png
+/usr/share/irfan/inc/icons/apps/irfan-clear-16.png
+/usr/share/irfan/inc/icons/apps/irfan-lubuntu-48.png
+/usr/share/irfan/inc/icons/apps/irfan-square-16.png
+/usr/share/irfan/inc/icons/apps/irfan-lubuntu-64.png
+%attr(755, -, -) /usr/share/irfan/inc/irfan-vlc.sh
+%attr(755, -, -) /usr/share/irfan/inc/install-irfanview.sh
+/usr/share/irfan/inc/irfan_ver.txt
+/usr/share/irfan/inc/sha256sum.txt
+/usr/share/irfan/inc/extra.txt
+%config %attr(666, -, -) /usr/share/irfan/inc/i_view32.ini
+%attr(755, -, -) /usr/share/irfan/inc/uninstall-irfanview.sh
+/usr/share/irfan/app
+%config %attr(666, -, -) /usr/share/irfan/app/i_view32.ini
+%doc %attr(444, -, -) /usr/share/doc/irfan/README.md
+%doc %attr(444, -, -) /usr/share/doc/irfan/version.txt
 
 %changelog
 * Tue Nov 29 2016 B Stack <bgstack15@gmail.com>
