@@ -1,1 +1,1 @@
-usr/share/doc/irfan/README.md
+#movingtogitlab [https://gitlab.com/bgstack15/irfan](https://gitlab.com/bgstack15/irfan)
